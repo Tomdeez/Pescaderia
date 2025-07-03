@@ -62,10 +62,21 @@ export default function DistribuidoraSection() {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
           viewport={{ once: true }}
-          className="w-full lg:w-1/2"
+          className="w-full lg:w-1/2 flex flex-col items-center"
         >
+          {/* Logo DG grande, centrado y con identidad */}
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/imagenes/dg logo.jpg"
+              alt="Logo Distribuidora DG"
+              width={84}
+              height={84}
+              className="rounded-full object-contain opacity-80 shadow-lg border border-gray-200 bg-white"
+              style={{ minWidth: 64, minHeight: 64 }}
+            />
+          </div>
           {/* Título principal SEO */}
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-sky-900 mb-4">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-sky-900 mb-4 text-center">
             Distribuidora DG Congelados - Logística y Frescura Garantizada
           </h2>
           {/* Subtítulo */}
