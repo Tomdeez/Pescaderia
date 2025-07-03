@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -347,7 +351,4 @@ footer {
   }
 }
 
-/* Scroll suave global */
-html {
-  scroll-behavior: smooth;
-} 
+ 
