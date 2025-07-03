@@ -59,7 +59,13 @@ export default function ContactoSection() {
   };
 
   return (
-    <section id="contacto" aria-label="Formulario de contacto y pedidos" className="w-full py-20 bg-sky-50 pt-24">
+    <section id="contacto" className="max-w-7xl mx-auto px-4 py-16 md:py-24 bg-[#F1F1F1]">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-[#003049] mb-6 text-center">
+        Contacto e Información
+      </h2>
+      <p className="text-lg md:text-xl text-slate-700 mb-8 text-center max-w-2xl mx-auto">
+        Consultanos cualquier duda o solicitá información sobre nuestros productos y servicios. ¡Te respondemos a la brevedad!
+      </p>
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-10 px-4">
         {/* Imagen decorativa */}
         <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">

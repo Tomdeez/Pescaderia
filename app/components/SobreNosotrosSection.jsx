@@ -1,15 +1,20 @@
 "use client";
 import { motion } from "framer-motion";
 
-// Sección Sobre Nosotros de la landing page premium
 export default function SobreNosotrosSection() {
   return (
     <section
       id="sobre-nosotros"
       aria-label="Sobre Nosotros - Compromiso y Frescura"
-      className="relative w-full py-20 bg-white flex items-center justify-center pt-24"
+      className="max-w-7xl mx-auto px-4 py-16 md:py-24 bg-white"
     >
-      <div className="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-10 px-4">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-[#003049] mb-6 text-center">
+        Sobre Nosotros
+      </h2>
+      <p className="text-lg md:text-xl text-slate-700 mb-8 text-center max-w-2xl mx-auto">
+        Más de 20 años de trayectoria familiar dedicados a la excelencia en pescados y mariscos frescos. Seleccionamos personalmente cada pieza para garantizar frescura y calidad premium en cada entrega.
+      </p>
+      <div className="flex flex-col md:flex-row items-center justify-center gap-10">
         {/* Imagen decorativa a la izquierda (arriba en mobile) */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
@@ -33,24 +38,15 @@ export default function SobreNosotrosSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left"
         >
-          {/* Badge de confianza */}
           <span className="inline-block bg-emerald-100 text-emerald-700 font-semibold px-4 py-1 rounded-full mb-4 text-sm shadow">20+ años de trayectoria</span>
-          {/* Título principal SEO */}
-          <h2 className="text-3xl md:text-4xl font-extrabold text-sky-900 mb-4">Sobre Nosotros - Compromiso y Frescura</h2>
-          {/* Párrafo principal */}
-          <p className="text-lg text-sky-800 mb-4">
-            En <span className="font-bold text-sky-900">Estrellita de Mar</span> somos una empresa familiar con más de dos décadas dedicadas a la excelencia en pescados y mariscos frescos. Nuestra historia comenzó en San Nicolás, impulsados por la pasión por el mar y el compromiso de llevar productos de calidad a cada hogar y comercio de la región. Seleccionamos personalmente cada pieza, garantizando frescura diaria y un trato cercano con nuestros clientes.
+          <p className="text-lg text-slate-800 mb-4">
+            En <span className="font-bold text-[#003049]">Estrellita de Mar</span> somos una empresa familiar con más de dos décadas dedicadas a la excelencia en pescados y mariscos frescos. Nuestra historia comenzó en San Nicolás, impulsados por la pasión por el mar y el compromiso de llevar productos de calidad a cada hogar y comercio de la región. Seleccionamos personalmente cada pieza, garantizando frescura diaria y un trato cercano con nuestros clientes.
           </p>
-          {/* Segundo párrafo opcional */}
           <p className="text-base text-gray-700 mb-2">
             Nos especializamos en atención personalizada, asesorando a familias, restaurantes y comercios para que siempre reciban lo mejor del mar. Nuestra distribución eficiente y la confianza de nuestros clientes nos avalan año tras año.
           </p>
         </motion.div>
       </div>
-      {/* Onda decorativa sutil en el fondo (opcional) */}
-      <svg className="absolute bottom-0 left-0 w-full h-12 md:h-16 text-sky-100" viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path fill="currentColor" d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" />
-      </svg>
     </section>
   );
 } 

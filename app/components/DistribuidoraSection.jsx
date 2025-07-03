@@ -30,8 +30,14 @@ export default function DistribuidoraSection() {
   ];
 
   return (
-    <section id="distribuidora" aria-label="Sección de distribución y logística" className="w-full py-20 bg-gradient-to-br from-sky-50 via-cyan-50 to-emerald-50 pt-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-12">
+    <section id="distribuidora" className="max-w-7xl mx-auto px-4 py-16 md:py-24 bg-white">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-[#003049] mb-6 text-center">
+        Distribuidora DG Congelados
+      </h2>
+      <p className="text-lg md:text-xl text-slate-700 mb-8 text-center max-w-2xl mx-auto">
+        Logística eficiente y cobertura regional para comercios y restaurantes. Productos premium, cadena de frío garantizada y atención personalizada.
+      </p>
+      <div className="flex flex-col lg:flex-row items-center gap-12">
         {/* Imagen ilustrativa */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
