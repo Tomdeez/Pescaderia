@@ -58,7 +58,7 @@ export default function ContactoSection() {
   };
 
   return (
-    <section id="contacto" aria-label="Formulario de contacto y pedidos" className="w-full py-20 bg-sky-50">
+    <section id="contacto" aria-label="Formulario de contacto y pedidos" className="w-full py-20 bg-sky-50 pt-24">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}

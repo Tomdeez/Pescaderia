@@ -1,3 +1,4 @@
+
 "use client";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -303,7 +304,7 @@ export default function ProductosSection() {
     <section 
       id="productos" 
       aria-label="Sección de productos destacados"
-      className="w-full py-20 bg-gradient-to-br from-sky-50 to-blue-50"
+      className="w-full py-20 bg-gradient-to-br from-sky-50 to-blue-50 pt-24"
     >
       {/* Contenedor principal centrado */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -7,7 +7,7 @@ export default function SobreNosotrosSection() {
     <section
       id="sobre-nosotros"
       aria-label="Sobre Nosotros - Compromiso y Frescura"
-      className="relative w-full py-20 bg-white flex items-center justify-center"
+      className="relative w-full py-20 bg-white flex items-center justify-center pt-24"
     >
       <div className="max-w-6xl w-full flex flex-col md:flex-row items-center justify-center gap-10 px-4">
         {/* Imagen decorativa a la izquierda (arriba en mobile) */}

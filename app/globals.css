@@ -345,4 +345,9 @@ footer {
   .page-title {
     font-size: 3.5rem;
   }
+}
+
+/* Scroll suave global */
+html {
+  scroll-behavior: smooth;
 } 

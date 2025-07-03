@@ -14,7 +14,7 @@ export default function InicioSection() {
       id="inicio"
       aria-label="Sección de inicio y bienvenida"
       ref={ref}
-      className="relative flex items-center justify-center min-h-[80vh] w-full overflow-hidden bg-gradient-to-br from-sky-100 via-white to-emerald-100"
+      className="relative flex items-center justify-center min-h-[80vh] w-full overflow-hidden bg-gradient-to-br from-sky-100 via-white to-emerald-100 pt-24"
     >
       {/* Imagen de fondo local con parallax, blur y opacidad */}
       <motion.img
