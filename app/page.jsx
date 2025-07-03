@@ -1,5 +1,6 @@
 "use client";
-import InicioSection from "./components/InicioSection";
+
+import HeroSection from "./components/HeroSection";
 import SobreNosotrosSection from "./components/SobreNosotrosSection";
 import ProductosSection from "./components/ProductosSection";
 import DistribuidoraSection from "./components/DistribuidoraSection";
@@ -7,12 +8,14 @@ import ContactoSection from "./components/ContactoSection";
 
 export default function LandingPage() {
   return (
-    <main>
-      <InicioSection />
-      <SobreNosotrosSection />
-      <ProductosSection />
-      <DistribuidoraSection />
-      <ContactoSection />
-    </main>
+    <>
+      <HeroSection />
+      <main>
+        <SobreNosotrosSection />
+        <ProductosSection />
+        <DistribuidoraSection />
+        <ContactoSection />
+      </main>
+    </>
   );
-} 
+}

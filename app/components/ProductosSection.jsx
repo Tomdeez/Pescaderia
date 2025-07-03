@@ -301,8 +301,7 @@ export default function ProductosSection() {
   };
 
   return (
-    <section 
-      id="productos" 
+    <section id="productos" 
       aria-label="Sección de productos destacados"
       className="w-full py-20 bg-gradient-to-br from-sky-50 to-blue-50 pt-24"
     >

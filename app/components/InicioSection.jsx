@@ -10,8 +10,7 @@ export default function InicioSection() {
   const y = useTransform(scrollY, [0, 200], ["0px", "40px"]);
 
   return (
-    <section
-      id="inicio"
+    <section id="presentacion"
       aria-label="Sección de inicio y bienvenida"
       ref={ref}
       className="relative flex items-center justify-center min-h-[80vh] w-full overflow-hidden bg-gradient-to-br from-sky-100 via-white to-emerald-100 pt-24"
