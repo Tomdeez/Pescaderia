@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const EASING = [0.4, 0, 0.2, 1] as const;
 
@@ -31,11 +32,13 @@ export const SobreNosotrosSection: React.FC = () => {
             transition={{ duration: 0.5, ease: EASING }}
             className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0"
           >
-            <img
+            <Image
               src="/imagenes/peslimon.jpg"
               alt="Filete de pescado fresco con rodajas de limón"
+              width={400}
+              height={256}
               className="w-full max-w-md h-64 object-cover rounded-2xl shadow-lg border border-sky-100"
-              loading="lazy"
+              priority={false}
             />
           </motion.div>
           {/* Bloque de texto a la derecha */}

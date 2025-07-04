@@ -109,7 +109,7 @@ export const Navbar: React.FC = () => {
       <AnimatePresence>
         {open && (
           <motion.div
-            ref={menuRef}
+            ref={open ? menuRef : null}
             id="menu-mobile"
             className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex justify-end md:hidden"
             role="dialog"
