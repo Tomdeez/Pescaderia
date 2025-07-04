@@ -3,9 +3,9 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
 // Hero Section de la landing page de Estrellita de Mar
-export default function InicioSection() {
+export const InicioSection: React.FC = () => {
   // Parallax sutil (opcional)
-  const ref = useRef(null);
+  const ref = useRef<HTMLElement>(null);
   const { scrollY } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollY, [0, 200], ["0px", "40px"]);
 
@@ -51,7 +51,7 @@ export default function InicioSection() {
         {/* Botón CTA animado */}
         <motion.a
           href="#productos"
-          className="inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-2xl border border-cyan-100/60 hover:border-cyan-300/80 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 backdrop-blur-sm"
+          className="inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-2xl border border-cyan-100/60 hover:border-cyan-300/80 transition-all duration-300 focus-visible:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 backdrop-blur-sm"
           whileHover={{ scale: 1.09, boxShadow: "0 16px 48px rgba(14,116,144,0.22)" }}
           whileTap={{ scale: 0.97 }}
           aria-label="Ver productos"
@@ -71,4 +71,6 @@ export default function InicioSection() {
       </div>
     </section>
   );
-} 
+};
+
+export default InicioSection; 

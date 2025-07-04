@@ -1,13 +1,10 @@
-// HeroSection.jsx
-// Componente premium para la sección principal de la landing de Estrellita de Mar
-
 import { motion } from "framer-motion";
 import Image from "next/image";
 
 // URL de imagen de fondo de mar en alta resolución (Unsplash, libre de derechos)
 const BACKGROUND_IMAGE = "/imagenes/pesfrescohielo.jpg";
 
-export default function HeroSection() {
+export const HeroSection: React.FC = () => {
   // Variantes de animación para el fade in desde abajo
   const fadeUp = {
     hidden: { opacity: 0, y: 40 },
@@ -17,7 +14,7 @@ export default function HeroSection() {
       transition: {
         delay: i * 0.2,
         duration: 0.8,
-        ease: "easeOut",
+        ease: "easeOut" as const,
       },
     }),
   };
@@ -64,7 +61,7 @@ export default function HeroSection() {
         <div className="flex flex-col sm:flex-row gap-4 w-full max-w-xs mx-auto">
           <motion.a
             href="#comprar"
-            className="inline-block rounded-lg px-8 py-3 text-lg font-semibold bg-[#F77F00] text-white shadow-md hover:bg-[#e76b00] focus:outline-none focus:ring-2 focus:ring-[#F77F00] focus:ring-offset-2 transition-colors duration-200"
+            className="inline-block rounded-lg px-8 py-3 text-lg font-semibold bg-[#F77F00] text-white shadow-md hover:bg-[#e76b00] focus-visible:outline-none focus:ring-2 focus:ring-[#F77F00] focus:ring-offset-2 transition-colors duration-200"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.7 }}
@@ -75,7 +72,7 @@ export default function HeroSection() {
           </motion.a>
           <motion.a
             href="#productos"
-            className="inline-block rounded-lg px-8 py-3 text-lg font-semibold border-2 border-[#F77F00] text-[#F77F00] bg-transparent hover:bg-[#F77F00]/10 focus:outline-none focus:ring-2 focus:ring-[#F77F00] focus:ring-offset-2 transition-colors duration-200"
+            className="inline-block rounded-lg px-8 py-3 text-lg font-semibold border-2 border-[#F77F00] text-[#F77F00] bg-transparent hover:bg-[#F77F00]/10 focus-visible:outline-none focus:ring-2 focus:ring-[#F77F00] focus:ring-offset-2 transition-colors duration-200"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.7 }}
@@ -88,13 +85,6 @@ export default function HeroSection() {
       </div>
     </section>
   );
-}
+};
 
-// -----------------------------
-// Dependencias necesarias:
-// -----------------------------
-// - framer-motion
-// - next/image (ya incluido en Next.js)
-//
-// Instala Framer Motion si no lo tienes:
-// npm install framer-motion 
+export default HeroSection; 

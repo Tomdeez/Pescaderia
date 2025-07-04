@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import { Navbar } from "@components/layout/Navbar";
+import { Footer } from "@components/layout/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +14,11 @@ export const metadata = {
   themeColor: "#003049",
 };
 
-export default function RootLayout({ children }) {
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="es">
       <head />

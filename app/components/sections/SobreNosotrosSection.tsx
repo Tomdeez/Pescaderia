@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 
-export default function SobreNosotrosSection() {
+export const SobreNosotrosSection: React.FC = () => {
   return (
     <section
       id="sobre-nosotros"
@@ -53,7 +53,7 @@ export default function SobreNosotrosSection() {
             </p>
             <motion.a
               href="#productos"
-              className="inline-block mt-4 rounded-lg px-8 py-3 text-lg font-semibold bg-[#F77F00] text-white shadow-md hover:bg-[#e76b00] focus:outline-none focus:ring-2 focus:ring-[#F77F00] focus:ring-offset-2 transition"
+              className="inline-block mt-4 rounded-lg px-8 py-3 text-lg font-semibold bg-[#F77F00] text-white shadow-md hover:bg-[#e76b00] focus-visible:outline-none focus:ring-2 focus:ring-[#F77F00] focus:ring-offset-2 transition"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               tabIndex={0}
@@ -65,4 +65,6 @@ export default function SobreNosotrosSection() {
       </motion.div>
     </section>
   );
-} 
+};
+
+export default SobreNosotrosSection; 
