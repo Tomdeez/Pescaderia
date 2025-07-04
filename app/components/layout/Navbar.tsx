@@ -11,7 +11,7 @@ const NAV_LINK = "text-white";
 const links = [
   { label: "Inicio", href: "#inicio" },
   { label: "Sobre Nosotros", href: "#sobre-nosotros" },
-  { label: "Catálogo", href: "#catalogo" },
+  { label: "Catálogo", href: "#productos" },
   { label: "Contacto", href: "#contacto" },
 ];
 

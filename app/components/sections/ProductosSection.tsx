@@ -118,6 +118,13 @@ export const ProductosSection: React.FC = () => {
     ? PRODUCTOS 
     : PRODUCTOS.filter(prod => prod.categoria === categoriaActiva);
 
+  // Debug: verificar que el componente se ejecuta
+  console.log("ProductosSection renderizado", {
+    categoriaActiva,
+    productosFiltradosLength: productosFiltrados.length,
+    productosFiltrados
+  });
+
   // Manejar cambio de cantidad
   const handleCantidad = (prodId: number, delta: number) => {
     setCantidades(prev => ({
@@ -194,14 +201,9 @@ export const ProductosSection: React.FC = () => {
               transition={{ delay: index * 0.1, duration: 0.7 }}
               className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="relative h-48">
-                <Image
-                  src={producto.imagen}
-                  alt={producto.alt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
+              {/* Imagen eliminada temporalmente para mejorar la carga */}
+              <div className="relative h-48 flex items-center justify-center bg-gray-100">
+                {/* Aquí irá la imagen cuando se agreguen las oficiales */}
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold text-[#003049] mb-2">{producto.nombre}</h3>

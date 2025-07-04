@@ -1,6 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 
+const EASING = [0.4, 0, 0.2, 1] as const;
+
 export const SobreNosotrosSection: React.FC = () => {
   return (
     <section
@@ -9,10 +11,10 @@ export const SobreNosotrosSection: React.FC = () => {
       className="max-w-7xl mx-auto px-4 py-16 md:py-24 bg-white"
     >
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.9, ease: 'easeOut' }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.5, ease: EASING }}
       >
         <h2 className="text-3xl md:text-4xl font-extrabold text-[#003049] mb-6 text-center">
           Sobre Nosotros
@@ -23,10 +25,10 @@ export const SobreNosotrosSection: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center justify-center gap-10">
           {/* Imagen decorativa a la izquierda (arriba en mobile) */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, ease: EASING }}
             className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0"
           >
             <img
@@ -38,10 +40,10 @@ export const SobreNosotrosSection: React.FC = () => {
           </motion.div>
           {/* Bloque de texto a la derecha */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, ease: EASING, delay: 0.2 }}
             className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left"
           >
             <span className="inline-block bg-emerald-100 text-emerald-700 font-semibold px-4 py-1 rounded-full mb-4 text-sm shadow">20+ años de trayectoria</span>
