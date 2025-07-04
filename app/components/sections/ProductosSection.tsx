@@ -157,17 +157,17 @@ export const ProductosSection: React.FC = () => {
   };
 
   return (
-    <section id="productos" className="max-w-7xl mx-auto px-4 py-16 md:py-24 bg-white">
+    <section id="productos" className="max-w-7xl mx-auto px-4 py-16 md:py-24 bg-[#012030]">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.01 }}
         transition={{ duration: 0.9 }}
       >
-        <h2 className="text-3xl md:text-4xl font-extrabold text-[#003049] mb-6 text-center">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6 text-center">
           Nuestros Productos
         </h2>
-        <p className="text-lg md:text-xl text-slate-700 mb-8 max-w-2xl mx-auto text-center">
+        <p className="text-lg md:text-xl text-slate-200 mb-8 max-w-2xl mx-auto text-center">
           Seleccionamos personalmente cada producto para garantizar frescura y calidad premium. Consultanos por disponibilidad y precios.
         </p>
 
@@ -177,9 +177,9 @@ export const ProductosSection: React.FC = () => {
             <motion.button
               key={categoria.id}
               onClick={() => setCategoriaActiva(categoria.id)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors focus-visible:outline-none focus:ring-2 focus:ring-[#F77F00] focus:ring-offset-2 ${
+              className={`px-4 py-2 rounded-lg font-medium transition-colors focus-visible:outline-none focus:ring-2 focus:ring-[#669BBC] focus:ring-offset-2 ${
                 categoriaActiva === categoria.id
-                  ? "bg-[#F77F00] text-white"
+                  ? "bg-[#176CA6] text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
               whileHover={{ scale: 1.05 }}
@@ -191,54 +191,56 @@ export const ProductosSection: React.FC = () => {
         </div>
 
         {/* Grid de productos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {productosFiltrados.map((producto, index) => (
-            <motion.div
-              key={producto.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ delay: index * 0.1, duration: 0.7 }}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-            >
-              {/* Imagen eliminada temporalmente para mejorar la carga */}
-              <div className="relative h-48 flex items-center justify-center bg-gray-100">
-                {/* Aquí irá la imagen cuando se agreguen las oficiales */}
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-[#003049] mb-2">{producto.nombre}</h3>
-                <p className="text-gray-600 mb-4">{producto.descripcion}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">{producto.peso}</span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleCantidad(producto.id, -1)}
-                      className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center focus-visible:outline-none focus:ring-2 focus:ring-[#F77F00]"
-                      disabled={!cantidades[producto.id]}
-                    >
-                      -
-                    </button>
-                    <span className="w-8 text-center font-medium">
-                      {cantidades[producto.id] || 0}
-                    </span>
-                    <button
-                      onClick={() => handleCantidad(producto.id, 1)}
-                      className="w-8 h-8 rounded-full bg-[#F77F00] hover:bg-[#e76b00] text-white flex items-center justify-center focus-visible:outline-none focus:ring-2 focus:ring-[#F77F00]"
-                    >
-                      +
-                    </button>
+        <div className="w-full overflow-x-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8 min-w-[320px]">
+            {productosFiltrados.map((producto, index) => (
+              <motion.div
+                key={producto.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ delay: index * 0.05, duration: 0.5 }}
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+              >
+                {/* Imagen eliminada temporalmente para mejorar la carga */}
+                <div className="relative h-48 flex items-center justify-center bg-gray-100">
+                  {/* Aquí irá la imagen cuando se agreguen las oficiales */}
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-[#003049] mb-2">{producto.nombre}</h3>
+                  <p className="text-gray-600 mb-4">{producto.descripcion}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">{producto.peso}</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleCantidad(producto.id, -1)}
+                        className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center focus-visible:outline-none focus:ring-2 focus:ring-[#176CA6]"
+                        disabled={!cantidades[producto.id]}
+                      >
+                        -
+                      </button>
+                      <span className="w-8 text-center font-medium">
+                        {cantidades[producto.id] || 0}
+                      </span>
+                      <button
+                        onClick={() => handleCantidad(producto.id, 1)}
+                        className="w-8 h-8 rounded-full bg-[#176CA6] hover:bg-[#003049] text-white flex items-center justify-center focus-visible:outline-none focus:ring-2 focus:ring-[#176CA6]"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {/* Botón de cotización */}
         <div className="text-center">
           <motion.button
             onClick={solicitarCotizacion}
-            className="inline-flex items-center gap-2 bg-[#F77F00] hover:bg-[#e76b00] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors focus-visible:outline-none focus:ring-2 focus:ring-[#F77F00] focus:ring-offset-2"
+            className="inline-flex items-center gap-2 bg-[#176CA6] hover:bg-[#003049] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors focus-visible:outline-none focus:ring-2 focus:ring-[#176CA6] focus:ring-offset-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
