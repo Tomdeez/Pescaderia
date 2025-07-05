@@ -24,7 +24,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body className={`${inter.className} bg-white text-slate-900`}>
         <Navbar />
-        <main className="flex-1 flex flex-col pt-20 md:pt-24 transition-all duration-300">
+        <main className="flex-1 flex flex-col transition-all duration-300">
           {children}
         </main>
         <Footer />

@@ -23,17 +23,16 @@ export const HeroSection: React.FC = () => {
   return (
     <section
       id="inicio"
-      className="relative w-screen h-screen flex items-center justify-center overflow-hidden bg-[#003049] p-0 m-0"
-      style={{ minHeight: "100vh" }}
+      className="relative -mt-16 w-screen h-screen flex items-center justify-center overflow-hidden bg-[#003049]"
     >
       {/* Imagen de fondo */}
-      <div className="absolute inset-0 w-screen h-screen left-0 top-0">
+      <div className="absolute inset-0">
         <Image
           src={BACKGROUND_IMAGE}
           alt="Fondo mar Estrellita de Mar"
           fill
           priority
-          className="object-cover object-center w-screen h-screen"
+          className="object-cover object-center"
           sizes="100vw"
         />
         {/* Overlay decorativo para contraste */}

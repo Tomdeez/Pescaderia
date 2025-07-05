@@ -60,7 +60,7 @@ export const Navbar: React.FC = () => {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`sticky top-0 left-0 w-full z-50 ${NAV_BG} shadow-lg`}
+      className="fixed top-0 left-0 w-full z-50 bg-[#003049]/80 backdrop-blur-md shadow-lg"
       role="navigation"
       aria-label="Barra de navegación principal"
       itemScope
