@@ -1,4 +1,5 @@
-"use client";
+'use client';
+
 import { useState, ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -10,7 +11,7 @@ interface FormData {
   mensaje: string;
 }
 
-export const ContactoSection: React.FC = () => {
+const ContactoSection = () => {
   // Estado del formulario
   const [form, setForm] = useState<FormData>({
     nombre: "",

@@ -1,10 +1,11 @@
-"use client";
+'use client';
+
 import { motion } from "framer-motion";
 import Image from "next/image";
 
 const EASING = [0.4, 0, 0.2, 1] as const;
 
-export const SobreNosotrosSection: React.FC = () => {
+const SobreNosotrosSection = () => {
   return (
     <section
       id="sobre-nosotros"

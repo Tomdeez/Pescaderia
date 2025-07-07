@@ -1,8 +1,9 @@
-"use client";
+'use client';
+
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-export const DistribuidoraSection: React.FC = () => {
+const DistribuidoraSection = () => {
   return (
     <section
       id="distribuidora"

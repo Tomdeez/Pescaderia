@@ -6,12 +6,33 @@ import { Footer } from "@components/layout/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Estrellita de Mar | Pescadería Premium",
-  description: "Los productos más frescos del mar directo a tu mesa.",
+  title: "Estrellita de Mar | Pescadería Premium en [Tu Ciudad]",
+  description: "Pescadería premium con los productos más frescos del mar. Mariscos selectos, pescados de primera calidad y servicio personalizado. Envíos a domicilio.",
+  keywords: "pescadería premium, mariscos frescos, pescado fresco, marisco premium, pescadería gourmet, mariscos de calidad",
+  openGraph: {
+    title: "Estrellita de Mar | Pescadería Premium",
+    description: "Los productos más frescos del mar directo a tu mesa. Calidad premium garantizada.",
+    images: [
+      {
+        url: "/imagenes/pesfrescohielo.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Pescados frescos Estrellita de Mar",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Estrellita de Mar | Pescadería Premium",
+    description: "Los productos más frescos del mar directo a tu mesa. Calidad premium garantizada.",
+    images: ["/imagenes/pesfrescohielo.jpg"],
+  },
   icons: {
     icon: "/favicon.ico",
   },
   themeColor: "#003049",
+  robots: "index, follow",
+  canonical: "https://estrellitademar.com",
 };
 
 interface RootLayoutProps {
