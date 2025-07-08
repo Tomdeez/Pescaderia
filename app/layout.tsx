@@ -6,6 +6,7 @@ import { Footer } from "@components/layout/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
+  metadataBase: new URL('https://estrellitademar.com'),
   title: "Estrellita de Mar | Pescadería Premium en [Tu Ciudad]",
   description: "Pescadería premium con los productos más frescos del mar. Mariscos selectos, pescados de primera calidad y servicio personalizado. Envíos a domicilio.",
   keywords: "pescadería premium, mariscos frescos, pescado fresco, marisco premium, pescadería gourmet, mariscos de calidad",
@@ -30,9 +31,12 @@ export const metadata = {
   icons: {
     icon: "/favicon.ico",
   },
-  themeColor: "#003049",
   robots: "index, follow",
   canonical: "https://estrellitademar.com",
+};
+
+export const viewport = {
+  themeColor: "#003049",
 };
 
 interface RootLayoutProps {

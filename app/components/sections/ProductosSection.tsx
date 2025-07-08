@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CardProducto } from '../ui/CardProducto';
+import { CardProducto } from '@components/ui/CardProducto';
 
 const productos = [
   {
