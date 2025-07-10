@@ -6,7 +6,7 @@ export const HeroSection = () => {
   return (
     <section 
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-24 md:pt-28"
     >
       {/* Imagen de fondo */}
       <div 
@@ -23,25 +23,30 @@ export const HeroSection = () => {
       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30" />
 
       {/* Contenido */}
-      <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
+      <div className="relative w-full max-w-5xl mx-auto px-4 z-10 flex flex-col items-center text-center justify-center min-h-[40vh]">
+        {/* Logo isotipo más chico */}
+        <div className="flex justify-center mb-6">
+          <img src="/imagenes/Claro.png" alt="Logo Estrellita de Mar" className="w-[100px] h-[100px] md:w-[140px] md:h-[140px] rounded-full bg-white/80 shadow-2xl" />
+        </div>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
+          className="w-full flex flex-col items-center text-center"
         >
           {/* Título principal con mejor sombra */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <span className="block text-white drop-shadow-2xl text-shadow-strong">
-              Del Mar a Tu Mesa,
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight w-full text-center">
+            <span className="block text-white drop-shadow-2xl text-shadow-strong w-full text-center">
+              Del Mar a Tu Mesa
             </span>
-            <span className="block text-sky-300 drop-shadow-2xl text-shadow-strong mt-2 font-extrabold">
+            <span className="block text-sky-300 drop-shadow-2xl text-shadow-strong mt-2 font-extrabold w-full text-center">
               Calidad Premium
             </span>
           </h1>
           
           {/* Subtítulo con fondo semi-transparente */}
           <div className="inline-block bg-black/40 backdrop-blur-sm rounded-2xl px-8 py-4 mb-8">
-            <p className="text-lg md:text-xl lg:text-2xl text-white font-medium leading-relaxed drop-shadow-lg">
+            <p className="text-base md:text-lg lg:text-xl text-white font-medium leading-relaxed drop-shadow-lg">
               Descubre la frescura y calidad excepcional de nuestros productos del mar, 
               seleccionados diariamente para garantizar la mejor experiencia gastronómica.
             </p>

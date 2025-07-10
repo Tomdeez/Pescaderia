@@ -5,18 +5,22 @@ interface CardProductoProps {
   imagen: string;
   titulo: string;
   descripcion: string;
-  precio?: string;
   categoria: string;
   disponibilidad: 'En Stock' | 'Bajo Pedido' | 'Temporada';
+  cantidad: number;
+  onSumar: () => void;
+  onRestar: () => void;
 }
 
 export const CardProducto = ({
   imagen,
   titulo,
   descripcion,
-  precio,
   categoria,
   disponibilidad,
+  cantidad,
+  onSumar,
+  onRestar,
 }: CardProductoProps) => {
   const disponibilidadColor = {
     'En Stock': 'bg-green-100 text-green-800',
@@ -48,11 +52,6 @@ export const CardProducto = ({
               {titulo}
             </h3>
           </div>
-          {precio && (
-            <span className="font-montserrat text-lg font-semibold text-primary">
-              {precio}
-            </span>
-          )}
         </div>
 
         <p className="text-text-light mb-4 line-clamp-2">{descripcion}</p>
@@ -63,13 +62,11 @@ export const CardProducto = ({
           >
             {disponibilidad}
           </span>
-
-          <Link
-            href="#contacto"
-            className="text-primary font-medium hover:text-accent transition-colors duration-300"
-          >
-            Consultar →
-          </Link>
+          <div className="flex items-center space-x-2">
+            <button onClick={onRestar} className="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-lg font-bold hover:bg-accent transition">-</button>
+            <span className="w-6 text-center font-semibold">{cantidad}</span>
+            <button onClick={onSumar} className="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-lg font-bold hover:bg-accent transition">+</button>
+          </div>
         </div>
       </div>
 

@@ -28,8 +28,8 @@ export const Navbar = () => {
     <nav
       className={`fixed w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/98 backdrop-blur-md shadow-xl py-3'
-          : 'bg-black/20 backdrop-blur-sm py-5'
+          ? 'bg-white/98 backdrop-blur-md shadow-xl py-2'
+          : 'bg-black/20 backdrop-blur-sm py-3'
       }`}
     >
       <div className="container-custom">
@@ -38,11 +38,11 @@ export const Navbar = () => {
           <Link href="/" className="relative z-10">
             <div className="flex items-center space-x-2">
               <Image
-                src="/imagenes/dg logo.jpg"
-                alt="Estrellita de Mar Logo"
-                width={50}
-                height={50}
-                className="rounded-full"
+                src="/imagenes/Oscuro sin txt.png"
+                alt="Isotipo Estrellita de Mar"
+                width={90}
+                height={90}
+                className="rounded-full bg-white shadow-xl"
               />
               <span className={`font-playfair text-xl font-bold transition-colors duration-300 ${
                 isScrolled ? 'text-primary' : 'text-white drop-shadow-lg'

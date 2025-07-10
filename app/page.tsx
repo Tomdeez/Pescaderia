@@ -27,15 +27,15 @@ export default function LandingPage() {
       <HeroSection />
       <main>
         <article className="flex flex-col gap-16">
-          <section id="sobre-nosotros">
-            <Suspense fallback={<div className="h-96 flex items-center justify-center">Cargando...</div>}>
-              <SobreNosotrosSection />
-            </Suspense>
-          </section>
-          
           <section id="productos" className="bg-slate-50">
             <Suspense fallback={<div className="h-96 flex items-center justify-center">Cargando...</div>}>
               <ProductosSection />
+            </Suspense>
+          </section>
+
+          <section id="sobre-nosotros">
+            <Suspense fallback={<div className="h-96 flex items-center justify-center">Cargando...</div>}>
+              <SobreNosotrosSection />
             </Suspense>
           </section>
           

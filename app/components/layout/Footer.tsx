@@ -43,11 +43,11 @@ export const Footer = () => {
             <Link href="/" className="inline-block">
               <div className="flex items-center space-x-2">
                 <Image
-                  src="/imagenes/dg logo.jpg"
-                  alt="Estrellita de Mar Logo"
-                  width={50}
-                  height={50}
-                  className="rounded-full"
+                  src="/imagenes/Oscuro sin txt.png"
+                  alt="Isotipo Estrellita de Mar"
+                  width={70}
+                  height={70}
+                  className="rounded-full bg-white shadow-lg"
                 />
                 <span className="font-playfair text-xl font-bold">
                   Estrellita de Mar
