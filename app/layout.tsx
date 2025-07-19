@@ -2,6 +2,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { Navbar } from "@components/layout/Navbar";
 import { Footer } from "@components/layout/Footer";
+import { WhatsappButton } from "@components/ui/WhatsappButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -53,6 +54,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
           {children}
         </main>
         <Footer />
+        <WhatsappButton 
+          phone="+54 9 3364 01-0667" 
+          message="Hola! Me interesa conocer más sobre sus productos frescos. ¿Podrían brindarme información?" 
+        />
       </body>
     </html>
   );
