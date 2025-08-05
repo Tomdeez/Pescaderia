@@ -1,0 +1,23 @@
+warning: in the working copy of 'app/components/layout/Navbar.tsx', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/app/components/layout/Navbar.tsx b/app/components/layout/Navbar.tsx[m
+[1mindex 4b6a809..2132c99 100644[m
+[1m--- a/app/components/layout/Navbar.tsx[m
+[1m+++ b/app/components/layout/Navbar.tsx[m
+[36m@@ -19,7 +19,7 @@[m [mexport const Navbar = () => {[m
+   const navLinks = [[m
+     { href: '#inicio', label: 'Inicio' },[m
+     { href: '#productos', label: 'Productos' },[m
+[31m-    { href: '#sobre-nosotros', label: 'Sobre Nosotros' },[m
+[32m+[m[32m    { href: '#recetas', label: 'Recetas' },[m
+     { href: '#distribuidora', label: 'Distribución' },[m
+     { href: '#contacto', label: 'Contacto' },[m
+   ];[m
+[36m@@ -38,7 +38,7 @@[m [mexport const Navbar = () => {[m
+           <Link href="/" className="relative z-10">[m
+             <div className="flex items-center space-x-2">[m
+               <Image[m
+[31m-                src="/imagenes/Oscuro sin txt.png"[m
+[32m+[m[32m                src="/imagenes/Claro sin txt.png"[m
+                 alt="Isotipo Estrellita de Mar"[m
+                 width={90}[m
+                 height={90}[m

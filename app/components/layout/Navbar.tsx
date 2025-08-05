@@ -19,7 +19,7 @@ export const Navbar = () => {
   const navLinks = [
     { href: '#inicio', label: 'Inicio' },
     { href: '#productos', label: 'Productos' },
-    { href: '#sobre-nosotros', label: 'Sobre Nosotros' },
+    { href: '#recetas', label: 'Recetas' },
     { href: '#distribuidora', label: 'Distribución' },
     { href: '#contacto', label: 'Contacto' },
   ];
@@ -38,7 +38,7 @@ export const Navbar = () => {
           <Link href="/" className="relative z-10">
             <div className="flex items-center space-x-2">
               <Image
-                src="/imagenes/Oscuro sin txt.png"
+                src="/imagenes/Claro sin txt.png"
                 alt="Isotipo Estrellita de Mar"
                 width={90}
                 height={90}
