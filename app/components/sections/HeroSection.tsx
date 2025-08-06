@@ -2,8 +2,12 @@
 
 import { motion } from "framer-motion";
 import Image from 'next/image';
+import { TruckIcon, CloudIcon, StarIcon } from '@heroicons/react/24/outline';
+import { beneficios } from '@data/beneficios';
 
 export const HeroSection = () => {
+  const iconos = [TruckIcon, CloudIcon, StarIcon];
+
   return (
     <>
       {/* Hero Section Principal */}
@@ -32,54 +36,57 @@ export const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <img 
+            <Image 
               src="/imagenes/Claro.png" 
               alt="Estrellita de Mar - Pescadería y Distribuidora en San Nicolás" 
+              width={120}
+              height={120}
+              priority
               className="w-[120px] h-[120px] md:w-[160px] md:h-[160px] rounded-full bg-white/90 shadow-2xl" 
             />
           </motion.div>
 
           {/* Bloque de texto con fondo redondeado */}
-                     <motion.div
-             initial={{ opacity: 0 }}
-             animate={{ opacity: 1 }}
-             transition={{ duration: 0.8, staggerChildren: 0.2, delayChildren: 0.3 }}
-             className="bg-black/40 backdrop-blur-md rounded-3xl px-8 py-10 md:px-12 md:py-12 shadow-2xl border border-white/10"
-           >
-             {/* H1 SEO optimizado */}
-             <motion.h1 
-               initial={{ opacity: 0, y: 60 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ duration: 0.8, delay: 0.3 }}
-               className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
-             >
-               <span className="block text-white drop-shadow-2xl">
-                 Del Mar a Tu Mesa
-               </span>
-               <span className="block mt-3 font-extrabold" style={{ color: '#669BBC' }}>
-                 Calidad Premium
-               </span>
-             </motion.h1>
-             
-             {/* Subtítulo explicativo */}
-             <motion.p 
-               initial={{ opacity: 0, y: 60 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ duration: 0.8, delay: 0.5 }}
-               className="text-lg md:text-xl lg:text-2xl text-white/90 font-medium leading-relaxed mb-10 max-w-3xl mx-auto"
-             >
-               Pescadería y distribuidora en San Nicolás con más de 20 años de experiencia. 
-               Ofrecemos productos del mar frescos y de primera calidad, 
-               seleccionados diariamente para garantizar la excelencia en tu mesa.
-             </motion.p>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, staggerChildren: 0.2, delayChildren: 0.3 }}
+            className="bg-black/40 backdrop-blur-md rounded-3xl px-8 py-10 md:px-12 md:py-12 shadow-2xl border border-white/10"
+          >
+            {/* H1 SEO optimizado */}
+            <motion.h1 
+              initial={{ opacity: 0, y: 60 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+            >
+              <span className="block text-white drop-shadow-2xl">
+                Del Mar a Tu Mesa
+              </span>
+              <span className="block mt-3 font-extrabold" style={{ color: '#669BBC' }}>
+                Calidad Garantizada
+              </span>
+            </motion.h1>
+            
+            {/* Subtítulo explicativo */}
+            <motion.p 
+              initial={{ opacity: 0, y: 60 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="text-lg md:text-xl lg:text-2xl text-white/90 font-medium leading-relaxed mb-10 max-w-3xl mx-auto"
+            >
+              Pescadería y distribuidora en San Nicolás con más de 20 años de experiencia. 
+              Ofrecemos productos del mar frescos y de primera calidad, 
+              seleccionados diariamente para garantizar la excelencia en tu mesa.
+            </motion.p>
 
-             {/* Botones */}
-             <motion.div
-               initial={{ opacity: 0, y: 60 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ duration: 0.8, delay: 0.7 }}
-               className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-             >
+            {/* Botones */}
+            <motion.div
+              initial={{ opacity: 0, y: 60 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.7 }}
+              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+            >
               <motion.a
                 href="#productos"
                 className="px-10 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg rounded-xl transition-all duration-300 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1"
@@ -131,40 +138,29 @@ export const HeroSection = () => {
             viewport={{ once: true }}
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
-            {[
-              { 
-                icono: "🚚", 
-                titulo: "24h Entrega en el día", 
-                descripcion: "Entrega rápida y segura en San Nicolás y zona metropolitana" 
-              },
-              { 
-                icono: "❄️", 
-                titulo: "100% Garantía de Frescura", 
-                descripcion: "Cadena de frío garantizada desde el mar hasta tu mesa" 
-              },
-              { 
-                icono: "⭐", 
-                titulo: "Premium – Calidad Certificada", 
-                descripcion: "Selección diaria y certificación de calidad en todos nuestros productos" 
-              }
-            ].map((beneficio, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
-              >
-                <div className="text-4xl mb-4">{beneficio.icono}</div>
-                <h3 className="text-xl lg:text-2xl font-bold text-gray-800 mb-3">
-                  {beneficio.titulo}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {beneficio.descripcion}
-                </p>
-              </motion.div>
-            ))}
+            {beneficios.map((beneficio, index) => {
+              const IconComponent = iconos[index];
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                  className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+                >
+                  <div className="flex justify-center mb-4">
+                    <IconComponent className="w-12 h-12 text-primary" />
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-gray-800 mb-3">
+                    {beneficio.titulo}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {beneficio.descripcion}
+                  </p>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </section>

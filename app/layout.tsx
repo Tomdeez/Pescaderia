@@ -1,19 +1,21 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display, Montserrat } from "next/font/google";
 import { Navbar } from "@components/layout/Navbar";
 import { Footer } from "@components/layout/Footer";
 import { WhatsappButton } from "@components/ui/WhatsappButton";
 
 const inter = Inter({ subsets: ["latin"] });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat" });
 
 export const metadata = {
   metadataBase: new URL('https://estrellitademar.com'),
-  title: "Estrellita de Mar | Pescadería Premium en [Tu Ciudad]",
-  description: "Pescadería premium con los productos más frescos del mar. Mariscos selectos, pescados de primera calidad y servicio personalizado. Envíos a domicilio.",
-  keywords: "pescadería premium, mariscos frescos, pescado fresco, marisco premium, pescadería gourmet, mariscos de calidad",
+  title: "Estrellita de Mar | Pescadería de Calidad en [Tu Ciudad]",
+  description: "Pescadería de calidad con los productos más frescos del mar. Mariscos selectos, pescados de primera calidad y servicio personalizado. Envíos a domicilio.",
+  keywords: "pescadería de calidad, mariscos frescos, pescado fresco, marisco selecto, pescadería gourmet, mariscos de calidad",
   openGraph: {
-    title: "Estrellita de Mar | Pescadería Premium",
-    description: "Los productos más frescos del mar directo a tu mesa. Calidad premium garantizada.",
+    title: "Estrellita de Mar | Pescadería de Calidad",
+    description: "Los productos más frescos del mar directo a tu mesa. Calidad garantizada.",
     images: [
       {
         url: "/imagenes/pesfrescohielo.jpg",
@@ -25,8 +27,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Estrellita de Mar | Pescadería Premium",
-    description: "Los productos más frescos del mar directo a tu mesa. Calidad premium garantizada.",
+    title: "Estrellita de Mar | Pescadería de Calidad",
+    description: "Los productos más frescos del mar directo a tu mesa. Calidad garantizada.",
     images: ["/imagenes/pesfrescohielo.jpg"],
   },
   icons: {
@@ -48,7 +50,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="es">
       <head />
-      <body className={`${inter.className} bg-white text-slate-900`}>
+      <body className={`${inter.className} ${playfair.variable} ${montserrat.variable} bg-white text-slate-900`}>
         <Navbar />
         <main className="flex-1 flex flex-col transition-all duration-300">
           {children}

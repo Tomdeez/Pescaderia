@@ -1,9 +1,14 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from 'tailwindcss';
+import { fontFamily } from 'tailwindcss/defaultTheme';
+import animate from 'tailwindcss-animate';
+import typography from '@tailwindcss/typography';
+import forms from '@tailwindcss/forms';
+
+export default {
   content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{ts,tsx,mdx}',
+    './components/**/*.{ts,tsx,mdx}',
+    './pages/**/*.{ts,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -26,8 +31,13 @@ module.exports = {
         },
       },
       fontFamily: {
-        playfair: ['Playfair Display', 'serif'],
-        montserrat: ['Montserrat', 'sans-serif'],
+        playfair: ['Playfair Display', ...fontFamily.serif],
+        montserrat: ['Montserrat', ...fontFamily.sans],
+      },
+      lineHeight: {
+        'title': '1.3',
+        'title-relaxed': '1.4',
+        'title-tight': '1.2',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
@@ -54,5 +64,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
-} 
+  plugins: [animate, typography, forms],
+} satisfies Config; 

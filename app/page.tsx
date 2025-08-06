@@ -1,15 +1,13 @@
-'use client';
-
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import { HeroSection } from "@components/sections/HeroSection";
 
 // Lazy load sections
-const SobreNosotrosSection = dynamic(() => import("@components/sections/SobreNosotrosSection"), {
+const ProductosSection = dynamic(() => import("@components/sections/ProductosSection"), {
   loading: () => <div className="h-96 flex items-center justify-center">Cargando...</div>
 });
 
-const ProductosSection = dynamic(() => import("@components/sections/ProductosSection"), {
+const RecetasSection = dynamic(() => import("@components/sections/RecetasSection"), {
   loading: () => <div className="h-96 flex items-center justify-center">Cargando...</div>
 });
 
@@ -32,10 +30,10 @@ export default function LandingPage() {
               <ProductosSection />
             </Suspense>
           </section>
-
-          <section id="sobre-nosotros">
+          
+          <section id="recetas">
             <Suspense fallback={<div className="h-96 flex items-center justify-center">Cargando...</div>}>
-              <SobreNosotrosSection />
+              <RecetasSection />
             </Suspense>
           </section>
           
