@@ -52,13 +52,13 @@ const RecetasSection = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.5, ease: EASING }}
-            className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0"
+            className="w-full flex justify-center"
           >
             <Image
               src="/imagenes/peslimon.jpg"
               alt="Delicioso plato de pescado preparado con limón y especias"
               width={400}
-              height={256}
+              height={300}
               className="w-full max-w-md h-64 object-cover rounded-2xl shadow-lg border border-sky-100"
               priority={false}
             />
@@ -69,7 +69,7 @@ const RecetasSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.5, ease: EASING, delay: 0.2 }}
-            className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left"
+            className="w-full flex flex-col items-center md:items-start text-center md:text-left"
           >
             <span className="inline-block bg-emerald-100 text-emerald-700 font-semibold px-4 py-1 rounded-full mb-6 text-sm shadow">Recetas recomendadas</span>
             
@@ -107,6 +107,7 @@ const RecetasSection = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               tabIndex={0}
+              aria-label="Ver productos"
             >
               Ver todos los productos
             </motion.a>

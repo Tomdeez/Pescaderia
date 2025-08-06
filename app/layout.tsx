@@ -7,33 +7,37 @@ import { WhatsappButton } from "@components/ui/WhatsappButton";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  metadataBase: new URL('https://estrellitademar.com'),
-  title: "Estrellita de Mar | Pescadería Premium en [Tu Ciudad]",
-  description: "Pescadería premium con los productos más frescos del mar. Mariscos selectos, pescados de primera calidad y servicio personalizado. Envíos a domicilio.",
-  keywords: "pescadería premium, mariscos frescos, pescado fresco, marisco premium, pescadería gourmet, mariscos de calidad",
+  title: "Estrellita de Mar – Pescadería Premium",
+  description: "Pescados y mariscos frescos, congelados y empanados. Calidad premium para consumo mayorista y minorista.",
+  keywords: [
+    "pescadería premium",
+    "pescados frescos",
+    "mariscos congelados",
+    "venta de pescado",
+    "Estrellita de Mar"
+  ],
+  themeColor: "#003049",
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
-    title: "Estrellita de Mar | Pescadería Premium",
-    description: "Los productos más frescos del mar directo a tu mesa. Calidad premium garantizada.",
+    title: "Estrellita de Mar – Pescadería Premium",
+    description: "Consultanos por nuestros productos frescos y congelados.",
+    url: "https://tudominio.vercel.app",
+    type: "website",
     images: [
       {
-        url: "/imagenes/pesfrescohielo.jpg",
+        url: "/imagenes/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Pescados frescos Estrellita de Mar",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Estrellita de Mar | Pescadería Premium",
-    description: "Los productos más frescos del mar directo a tu mesa. Calidad premium garantizada.",
-    images: ["/imagenes/pesfrescohielo.jpg"],
+        alt: "Pescados y mariscos Estrellita de Mar",
+      }
+    ]
   },
   icons: {
-    icon: "/favicon.ico",
-  },
-  robots: "index, follow",
-  canonical: "https://estrellitademar.com",
+    icon: "/favicon.ico"
+  }
 };
 
 export const viewport = {
