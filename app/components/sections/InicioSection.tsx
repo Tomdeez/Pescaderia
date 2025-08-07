@@ -40,7 +40,7 @@ export const InicioSection: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-3xl md:text-5xl font-extrabold text-sky-900 mb-3 tracking-tight leading-tight drop-shadow-xl w-full text-center"
         >
-          Pescadería Premium en San Nicolás
+          Pescadería de Calidad en San Nicolás
         </motion.h1>
         {/* Subtítulo animado */}
         <motion.p

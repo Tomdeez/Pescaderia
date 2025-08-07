@@ -2,47 +2,14 @@
 
 import { useState } from 'react';
 import { CardProducto } from '@components/ui/CardProducto';
-
-const productos = [
-  {
-    id: 1,
-    titulo: 'Salmón Fresco Premium',
-    descripcion: 'Salmón noruego de la más alta calidad, ideal para preparaciones en crudo o cocidas.',
-    imagen: '/imagenes/pesfrescohielo.jpg',
-    categoria: 'Pescados',
-    disponibilidad: 'En Stock' as const,
-  },
-  {
-    id: 2,
-    titulo: 'Langostinos Patagónicos',
-    descripcion: 'Langostinos salvajes de la Patagonia, perfectos para parrilla o preparaciones gourmet.',
-    imagen: '/imagenes/langostinos.jpg',
-    categoria: 'Mariscos',
-    disponibilidad: 'Bajo Pedido' as const,
-  },
-  {
-    id: 3,
-    titulo: 'Pulpo Gallego',
-    descripcion: 'Pulpo certificado de las rías gallegas, textura tierna y sabor excepcional.',
-    imagen: '/imagenes/picadamar.jpg',
-    categoria: 'Mariscos',
-    disponibilidad: 'Temporada' as const,
-  },
-  {
-    id: 4,
-    titulo: 'Camarones Premium',
-    descripcion: 'Camarones frescos seleccionados, perfectos para cócteles y entradas.',
-    imagen: '/imagenes/camaron.jpg',
-    categoria: 'Mariscos',
-    disponibilidad: 'En Stock' as const,
-  },
-];
-
-const categorias = ['Todos', 'Pescados', 'Mariscos'];
+import { productos } from '@data/productos';
 
 const ProductosSection = () => {
   const [categoriaActiva, setCategoriaActiva] = useState('Todos');
   const [carrito, setCarrito] = useState<{[id:number]: number}>({});
+
+  // Generar categorías dinámicamente
+  const categorias = ['Todos', ...new Set(productos.map(p => p.categoria))];
 
   const productosFiltrados = categoriaActiva === 'Todos'
     ? productos
@@ -72,7 +39,7 @@ const ProductosSection = () => {
           <span className="text-xs font-medium text-accent uppercase tracking-wider">
             Nuestros Productos
           </span>
-          <h2 className="text-3xl md:text-4xl font-playfair font-bold text-gradient text-center w-full max-w-full whitespace-normal leading-tight">Selección Premium del Mar</h2>
+          <h2 className="text-3xl md:text-4xl font-playfair font-bold text-gradient text-center w-full max-w-full leading-title-relaxed py-2">Selección del Mar</h2>
           <p className="text-base">
             Descubre nuestra cuidadosa selección de productos del mar, 
             donde la calidad y la frescura son nuestra prioridad.

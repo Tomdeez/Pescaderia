@@ -6,9 +6,9 @@
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "noEmit": true,
     "incremental": true,
     "module": "esnext",
@@ -29,6 +29,9 @@
       ],
       "@/*": [
         "./app/*"
+      ],
+      "@data/*": [
+        "./data/*"
       ]
     }
   },

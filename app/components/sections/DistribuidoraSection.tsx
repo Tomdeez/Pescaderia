@@ -37,7 +37,7 @@ const DistribuidoraSection = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h2.28a2 2 0 011.94 1.515l.3 1.2a2 2 0 01-.45 1.95l-.7.7a16.001 16.001 0 006.36 6.36l.7-.7a2 2 0 011.95-.45l1.2.3A2 2 0 0121 18.72V21a2 2 0 01-2 2h-1C9.163 23 1 14.837 1 5V4a2 2 0 012-2z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-[#003049] mb-3 text-center">Delivery a Domicilio</h3>
+            <h3 className="text-xl font-bold text-[#003049] mb-3 text-center leading-title-relaxed">Delivery a Domicilio</h3>
             <p className="text-gray-600 text-center">
               Llevamos nuestros productos frescos directamente a tu puerta. Pedidos mínimos y horarios flexibles para tu comodidad.
             </p>
@@ -56,9 +56,9 @@ const DistribuidoraSection = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-[#003049] mb-3 text-center">Distribución a Comercios</h3>
+            <h3 className="text-xl font-bold text-[#003049] mb-3 text-center leading-title-relaxed">Distribución a Comercios</h3>
             <p className="text-gray-600 text-center">
-              Abastecemos restaurantes, pescaderías y comercios con productos de calidad premium. Pedidos programados y atención personalizada.
+              Abastecemos restaurantes, pescaderías y comercios con productos de excelente calidad. Pedidos programados y atención personalizada.
             </p>
           </motion.div>
 
@@ -75,7 +75,7 @@ const DistribuidoraSection = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-[#003049] mb-3 text-center">Atención Personalizada</h3>
+            <h3 className="text-xl font-bold text-[#003049] mb-3 text-center leading-title-relaxed">Atención Personalizada</h3>
             <p className="text-gray-600 text-center">
               Asesoramiento especializado para cada cliente. Te ayudamos a elegir los mejores productos según tus necesidades.
             </p>
