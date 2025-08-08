@@ -13,7 +13,7 @@ export const beneficios: Beneficio[] = [
   { 
     icono: "❄️", 
     titulo: "100% Garantía de Frescura", 
-    descripcion: "Cadena de frío garantizada desde el mar hasta tu mesa" 
+    descripcion: "Cadena de frío garantizada desde el origen hasta tu mesa" 
   },
   { 
     icono: "⭐", 

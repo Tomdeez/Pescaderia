@@ -1,12 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CardProducto } from '@components/ui/CardProducto';
+import ProductSkeleton from '@components/ui/ProductSkeleton';
 import { productos } from '@data/productos';
+import { useCarritoValidation } from '@hooks/useCarritoValidation';
+import { useWhatsapp } from '@hooks/useWhatsapp';
 
 const ProductosSection = () => {
   const [categoriaActiva, setCategoriaActiva] = useState('Todos');
   const [carrito, setCarrito] = useState<{[id:number]: number}>({});
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Validación del carrito
+  const { hasErrors, messages } = useCarritoValidation({ carrito, productos });
+  
+  // Simular carga de productos
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Generar categorías dinámicamente
   const categorias = ['Todos', ...new Set(productos.map(p => p.categoria))];
@@ -32,30 +47,50 @@ const ProductosSection = () => {
 
   const productosSeleccionados = productos.filter(p => carrito[p.id]);
 
+  const { sendWhatsAppMessage } = useWhatsapp();
+
+  const handleSolicitarCotizacion = () => {
+    const phone = '+5493364010667'; // Número de teléfono de la pescadería
+    const productosMensaje = productosSeleccionados.map(p => `${p.titulo} - Cantidad: ${carrito[p.id]}`).join('\n');
+    const mensaje = `Hola, me gustaría cotizar los siguientes productos:\n${productosMensaje}`;
+    sendWhatsAppMessage(phone, mensaje);
+  };
+
   return (
-    <section id="productos" className="py-8 md:py-14 bg-background-alt">
-      <div className="w-full max-w-5xl mx-auto px-4">
-        <div className="section-title">
-          <span className="text-xs font-medium text-accent uppercase tracking-wider">
-            Nuestros Productos
-          </span>
-          <h2 className="text-3xl md:text-4xl font-playfair font-bold text-gradient text-center w-full max-w-full leading-title-relaxed py-2">Selección del Mar</h2>
-          <p className="text-base">
-            Descubre nuestra cuidadosa selección de productos del mar, 
-            donde la calidad y la frescura son nuestra prioridad.
+    <section id="productos" className="py-8 md:py-14 bg-white">
+      <div className="w-full max-w-6xl mx-auto px-4">
+        {/* Encabezado con instrucciones claras */}
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-sky-950 mb-4">Nuestros Productos</h2>
+          <p className="text-lg text-gray-700 mb-6">
+            Explore nuestra selección de productos frescos. Para hacer su pedido:
           </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 text-base text-gray-600">
+            <div className="flex items-center gap-2">
+              <span className="bg-sky-100 rounded-full w-8 h-8 flex items-center justify-center text-sky-700 font-semibold">1</span>
+              <span>Elija una categoría</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="bg-sky-100 rounded-full w-8 h-8 flex items-center justify-center text-sky-700 font-semibold">2</span>
+              <span>Seleccione cantidad</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="bg-sky-100 rounded-full w-8 h-8 flex items-center justify-center text-sky-700 font-semibold">3</span>
+              <span>Solicite cotización</span>
+            </div>
+          </div>
         </div>
 
-        {/* Filtros */}
-        <div className="flex justify-center space-x-2 mb-8">
+        {/* Filtros simplificados */}
+        <div className="flex flex-wrap justify-center gap-3 mb-10">
           {categorias.map((categoria) => (
             <button
               key={categoria}
               onClick={() => setCategoriaActiva(categoria)}
-              className={`px-4 py-1.5 rounded-full text-sm transition-all duration-300 ${
+              className={`px-6 py-2.5 rounded-lg text-base font-medium transition-all duration-300 ${
                 categoriaActiva === categoria
-                  ? 'bg-primary text-white shadow-lg'
-                  : 'bg-white text-primary hover:bg-primary/5'
+                  ? 'bg-sky-600 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               {categoria}
@@ -63,65 +98,100 @@ const ProductosSection = () => {
           ))}
         </div>
 
-        {/* Grid de Productos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {productosFiltrados.map((producto) => (
-            <div key={producto.id} className="reveal">
-              <CardProducto
-                {...producto}
-                cantidad={carrito[producto.id] || 0}
-                onSumar={() => handleSumar(producto.id)}
-                onRestar={() => handleRestar(producto.id)}
-              />
-            </div>
-          ))}
-        </div>
+        {/* Grid de Productos y Resumen de Pedido */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Lista de Productos */}
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {isLoading ? (
+              // Mostrar esqueletos durante la carga
+              Array.from({ length: 4 }).map((_, index) => (
+                <div key={`skeleton-${index}`}>
+                  <ProductSkeleton />
+                </div>
+              ))
+            ) : (
+              // Mostrar productos una vez cargados
+              productosFiltrados.map((producto) => (
+                <div key={producto.id}>
+                  <CardProducto
+                    {...producto}
+                    cantidad={carrito[producto.id] || 0}
+                    onSumar={() => handleSumar(producto.id)}
+                    onRestar={() => handleRestar(producto.id)}
+                  />
+                </div>
+              ))
+            )}
+          </div>
 
-        {/* Nota de Calidad */}
-        <div className="mt-16 text-center">
-          <div className="inline-block bg-white rounded-xl p-6 shadow-lg">
-            <p className="text-text-light">
-              <span className="font-semibold text-primary">Nota:</span>{' '}
-              Todos nuestros productos son seleccionados diariamente para garantizar 
-              la máxima frescura y calidad. Los precios pueden variar según el mercado 
-              y la temporada.
-            </p>
+          {/* Panel de Resumen y Cotización */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24 bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Resumen del Pedido</h3>
+              
+              {productosSeleccionados.length === 0 ? (
+                <div className="text-center py-8">
+                  <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <p className="text-gray-500">No ha seleccionado ningún producto</p>
+                </div>
+              ) : (
+                <div className="space-y-4 mb-6">
+                  {productosSeleccionados.map(producto => (
+                    <div key={producto.id} className="flex justify-between items-center py-2 border-b">
+                      <div>
+                        <p className="font-medium text-gray-900">{producto.titulo}</p>
+                        <p className="text-sm text-gray-500">Cantidad: {carrito[producto.id]}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {/* Mensajes de error */}
+                {hasErrors && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <ul className="list-disc list-inside space-y-1">
+                      {messages.map((message, index) => (
+                        <li key={index} className="text-sm text-red-600">{message}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {/* Botón de cotización */}
+                <button
+                  onClick={handleSolicitarCotizacion}
+                  disabled={productosSeleccionados.length === 0 || hasErrors}
+                  className="w-full bg-sky-600 text-white py-4 px-6 rounded-lg text-lg font-medium hover:bg-sky-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {productosSeleccionados.length === 0 ? (
+                    'Seleccione productos'
+                  ) : hasErrors ? (
+                    'Revise los errores'
+                  ) : (
+                    <>
+                      Solicitar Cotización
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Nota informativa */}
+              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  <span className="font-medium">Nota:</span> Los precios se cotizarán según disponibilidad y mercado. Nos contactaremos con usted para confirmar su pedido.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Botón de consultar cotización */}
-        <div className="mt-10 flex justify-center">
-          <button
-            className="bg-gradient-to-r from-primary to-accent text-white font-bold py-3 px-8 rounded-full shadow-lg text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={productosSeleccionados.length === 0}
-            onClick={() => {
-              // Aquí podrías abrir un modal, redirigir o mostrar un formulario de contacto
-              window.location.href = '#contacto';
-            }}
-          >
-            Consultar Cotización
-          </button>
-        </div>
       </div>
-
-      {/* Script para animaciones de scroll */}
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            reveals.forEach((reveal) => {
-              var windowHeight = window.innerHeight;
-              var elementTop = reveal.getBoundingClientRect().top;
-              var elementVisible = 150;
-              if (elementTop < windowHeight - elementVisible) {
-                reveal.classList.add("active");
-              }
-            });
-          }
-          window.addEventListener("scroll", reveal);
-          reveal();
-        `
-      }} />
     </section>
   );
 };

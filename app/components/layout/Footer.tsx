@@ -144,22 +144,22 @@ export const Footer = () => {
               <ul className="space-y-4 text-white/80">
                 <li>
                   <a
-                    href="tel:+1234567890"
+                    href="tel:3364010667"
                     className="hover:text-accent transition-colors duration-300"
                   >
-                    +123 456 7890
+                    3364010667
                   </a>
                 </li>
                 <li>
                   <a
-                    href="mailto:info@estrellitademar.com"
+                    href="tel:33644133822"
                     className="hover:text-accent transition-colors duration-300"
                   >
-                    info@estrellitademar.com
+                    (336) 44133822
                   </a>
                 </li>
-                <li>Av. del Mar 123,</li>
-                <li>Ciudad del Mar, CP 12345</li>
+
+                <li>Belgrano y 9 de Julio</li>
               </ul>
             </address>
           </div>

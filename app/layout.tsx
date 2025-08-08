@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Estrellita de Mar – Pescadería Premium",
-  description: "Pescados y mariscos frescos, congelados y empanados. Calidad premium para consumo mayorista y minorista.",
+  description: "Pescados y mariscos frescos de mar y río, congelados y empanados. Calidad premium para consumo mayorista y minorista.",
   keywords: [
     "pescadería premium",
     "pescados frescos",

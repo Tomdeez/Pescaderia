@@ -7,71 +7,80 @@ export const InicioSection: React.FC = () => {
   // Parallax sutil (opcional)
   const ref = useRef<HTMLElement>(null);
   const { scrollY } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollY, [0, 200], ["0px", "40px"]);
+  const y = useTransform(scrollY, [0, 300], ["0px", "30px"]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0.6]);
 
   return (
     <section id="presentacion"
       aria-label="Sección de inicio y bienvenida"
       ref={ref}
-      className="relative flex items-center justify-center min-h-[60vh] w-full overflow-hidden bg-gradient-to-br from-sky-100 via-white to-emerald-100 pt-24 md:pt-28" // antes pt-12
+      className="relative flex items-center justify-center min-h-screen w-full overflow-hidden bg-gradient-to-b from-sky-50 to-white pt-16 sm:pt-20 md:pt-24 lg:pt-28"
     >
-      {/* Imagen de fondo local con parallax, blur y opacidad */}
-      <motion.img
-        src="/imagenes/marifrescos.jpg"
-        alt="Variedad de mariscos frescos sobre hielo en la pescadería"
-        className="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none select-none"
-        style={{ y }}
-        loading="lazy"
-        aria-hidden="true"
-      />
-      {/* Overlay degradado azul y verde con más opacidad y blur */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-sky-700/60 via-white/10 to-emerald-500/50 backdrop-blur-sm" />
+      {/* Imagen de fondo con efecto paralax suave */}
+      <motion.div
+        className="absolute inset-0 w-full h-full"
+        style={{ y, opacity }}
+      >
+        <div className="relative w-full h-full">
+          <img
+            src="/imagenes/marifrescos.jpg"
+            alt="Variedad de mariscos frescos sobre hielo en la pescadería"
+            className="w-full h-full object-cover opacity-40"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-sky-900/30 to-transparent" />
+        </div>
+      </motion.div>
       {/* Contenido central */}
-      <div className="relative w-full max-w-5xl mx-auto px-4 z-10 flex flex-col items-center text-center justify-center min-h-[40vh]">
-        {/* Logo isotipo más chico */}
-        <div className="flex justify-center mb-6">
-          <img src="/imagenes/Claro.png" alt="Logo Estrellita de Mar" className="w-[100px] h-[100px] md:w-[140px] md:h-[140px] rounded-full bg-white/80 shadow-2xl" />
+      <div className="relative w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 z-10 flex flex-col items-center text-center justify-center gap-6 sm:gap-8 md:gap-10">
+        {/* Logo y título agrupados */}
+        <div className="space-y-6">
+          <img 
+            src="/imagenes/Claro.png" 
+            alt="Logo Estrellita de Mar" 
+            className="w-[120px] h-[120px] md:w-[160px] md:h-[160px] mx-auto rounded-full bg-white/90 shadow-lg" 
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-4"
+          >
+            <h1 className="text-4xl md:text-6xl font-bold text-sky-950 tracking-tight">
+              Pescadería de Calidad
+            </h1>
+            <p className="text-xl md:text-2xl font-medium text-sky-800/90">
+              en San Nicolás
+            </p>
+          </motion.div>
         </div>
-        {/* Título principal animado */}
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.7 }}
-          transition={{ duration: 0.8 }}
-          className="text-3xl md:text-5xl font-extrabold text-sky-900 mb-3 tracking-tight leading-tight drop-shadow-xl w-full text-center"
-        >
-          Pescadería de Calidad en San Nicolás
-        </motion.h1>
-        {/* Subtítulo animado */}
-        <motion.p
+
+        {/* Descripción y CTA */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.7 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="text-base md:text-lg text-sky-800 font-medium mb-6 drop-shadow w-full text-center"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="max-w-2xl space-y-8"
         >
-          Mariscos frescos, atención personalizada y calidad garantizada para tu mesa o negocio. Viví la experiencia Estrellita de Mar.
-        </motion.p>
-        {/* Botón CTA animado */}
-        <motion.a
-          href="#productos"
-          className="inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-6 rounded-full text-base shadow-2xl border border-cyan-100/60 hover:border-cyan-300/80 transition-all duration-300 focus-visible:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 backdrop-blur-sm"
-          whileHover={{ scale: 1.09, boxShadow: "0 16px 48px rgba(14,116,144,0.22)" }}
-          whileTap={{ scale: 0.97 }}
-          aria-label="Ver productos"
-          tabIndex={0}
-          role="button"
-        >
-          {/* Ícono de pescado */}
-          <svg className="w-6 h-6 mr-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zm10 0v.01" /></svg>
-          Ver Productos
-        </motion.a>
-        {/* Iconos decorativos sutiles */}
-        <div className="flex gap-4 mt-8 justify-center">
-          <span className="text-cyan-400 text-3xl" title="Pescado">🐟</span>
-          <span className="text-emerald-400 text-3xl" title="Concha">🐚</span>
-          <span className="text-cyan-500 text-3xl" title="Delivery">🚚</span>
-        </div>
+          <p className="text-lg md:text-xl text-sky-800/80 leading-relaxed">
+            Mariscos frescos y atención personalizada para tu mesa o negocio. 
+            <span className="block mt-2 font-medium">Viví la experiencia Estrellita de Mar.</span>
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <motion.a
+              href="#productos"
+              className="group flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-medium py-3 px-8 rounded-full text-lg shadow-lg transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Ver Productos
+              <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </motion.a>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -52,9 +52,9 @@ const ContactoSection = () => {
                 Hacenos tu pedido o consultanos disponibilidad.
               </p>
               
-              {/* WhatsApp Button */}
+              {/* WhatsApp Button para Minorista */}
               <motion.a
-                href="#"
+                href="https://wa.me/5493364010667"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
@@ -91,9 +91,9 @@ const ContactoSection = () => {
                 Precios especiales para negocios, restaurantes y eventos.
               </p>
               
-              {/* WhatsApp Button */}
+              {/* WhatsApp Button para Mayorista */}
               <motion.a
-                href="#"
+                href="https://wa.me/5493364562480"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}

@@ -1,18 +1,40 @@
 export default function Head() {
+  const description = "Pescadería premium especializada en pescados y mariscos frescos de mar y río. Productos de alta calidad para mayoristas y minoristas. Envíos a todo el país.";
+  const title = "Estrellita de Mar – Pescadería Premium | Pescados y Mariscos Frescos";
+  const domain = "https://tudominio.vercel.app";
+
   return (
     <>
-      <title>Estrellita de Mar – Pescadería Premium</title>
-      <meta name="description" content="Pescados y mariscos frescos, congelados y empanados. Calidad premium para consumo mayorista y minorista." />
+      <title>{title}</title>
+      <meta name="description" content={description} />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="theme-color" content="#003049" />
       <meta name="robots" content="index, follow" />
       <link rel="icon" href="/favicon.ico" />
-      {/* Etiquetas Open Graph para mejor visualización en redes sociales */}
-      <meta property="og:title" content="Estrellita de Mar – Pescadería Premium" />
-      <meta property="og:description" content="Consultanos por nuestros productos frescos y congelados." />
-      <meta property="og:image" content="/imagenes/og-image.jpg" />
+      <link rel="canonical" href={domain} />
+      
+      {/* Keywords relevantes para SEO */}
+      <meta name="keywords" content="pescadería, mariscos frescos, pescados frescos, venta mayorista, venta minorista, productos del mar, pescados premium, mariscos premium" />
+      
+      {/* Etiquetas Open Graph mejoradas */}
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:image" content={`${domain}/imagenes/og-image.jpg`} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://tudominio.vercel.app" />
+      <meta property="og:url" content={domain} />
+      <meta property="og:site_name" content="Estrellita de Mar" />
+      
+      {/* Twitter Card */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={`${domain}/imagenes/og-image.jpg`} />
+      
+      {/* Metadatos adicionales */}
+      <meta name="format-detection" content="telephone=no" />
+      <meta name="language" content="Spanish" />
+      <meta name="revisit-after" content="7 days" />
+      <meta name="author" content="Estrellita de Mar" />
     </>
   );
 }

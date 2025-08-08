@@ -76,7 +76,7 @@ export const HeroSection = () => {
               className="text-lg md:text-xl lg:text-2xl text-white/90 font-medium leading-relaxed mb-10 max-w-3xl mx-auto"
             >
               Pescadería y distribuidora en San Nicolás con más de 20 años de experiencia. 
-              Ofrecemos productos del mar frescos y de primera calidad, 
+              Ofrecemos productos frescos de mar y río de primera calidad, 
               seleccionados diariamente para garantizar la excelencia en tu mesa.
             </motion.p>
 
