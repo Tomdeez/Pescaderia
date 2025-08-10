@@ -11,6 +11,9 @@ const ProductosSection = () => {
   const [categoriaActiva, setCategoriaActiva] = useState('Todos');
   const [carrito, setCarrito] = useState<{[id:number]: number}>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [busqueda, setBusqueda] = useState('');
+  const INCREMENTO_LISTA = 6; // 3 filas en md (2 col) => 6 ítems
+  const [cantidadVisible, setCantidadVisible] = useState(INCREMENTO_LISTA);
   
   // Validación del carrito
   const { hasErrors, messages } = useCarritoValidation({ carrito, productos });
@@ -26,9 +29,33 @@ const ProductosSection = () => {
   // Generar categorías dinámicamente
   const categorias = ['Todos', ...new Set(productos.map(p => p.categoria))];
 
-  const productosFiltrados = categoriaActiva === 'Todos'
+  // Filtro por categoría y búsqueda (intuitivo y tolerante a mayúsculas/acentos simples)
+  const normalizar = (texto: string) =>
+    texto
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '');
+
+  const criterio = normalizar(busqueda);
+
+  const productosPorCategoria = categoriaActiva === 'Todos'
     ? productos
     : productos.filter(p => p.categoria === categoriaActiva);
+
+  const productosFiltrados = criterio
+    ? productosPorCategoria.filter(p =>
+        normalizar(p.titulo).includes(criterio) ||
+        normalizar(p.descripcion).includes(criterio) ||
+        normalizar(p.categoria).includes(criterio)
+      )
+    : productosPorCategoria;
+
+  const productosParaMostrar = productosFiltrados.slice(0, cantidadVisible);
+
+  // Resetear paginación al cambiar categoría o búsqueda
+  useEffect(() => {
+    setCantidadVisible(INCREMENTO_LISTA);
+  }, [categoriaActiva, busqueda]);
 
   const handleSumar = (id: number) => {
     setCarrito(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
@@ -81,7 +108,42 @@ const ProductosSection = () => {
           </div>
         </div>
 
-        {/* Filtros simplificados */}
+          {/* Buscador accesible */}
+          <div className="max-w-2xl mx-auto mb-6">
+            <label htmlFor="buscador-productos" className="sr-only">Buscar productos</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="M21 21l-4.3-4.3"></path>
+                </svg>
+              </span>
+              <input
+                id="buscador-productos"
+                type="search"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                placeholder="Buscar por nombre, categoría o descripción"
+                aria-label="Buscar productos"
+                className="w-full pl-10 pr-24 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-gray-800"
+              />
+              {busqueda && (
+                <button
+                  type="button"
+                  onClick={() => setBusqueda('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700"
+                  aria-label="Limpiar búsqueda"
+                >
+                  Limpiar
+                </button>
+              )}
+            </div>
+            <div className="mt-2 text-sm text-gray-600 text-center">
+              {productosFiltrados.length} resultado{productosFiltrados.length !== 1 ? 's' : ''}
+            </div>
+          </div>
+
+          {/* Filtros simplificados */}
         <div className="flex flex-wrap justify-center gap-3 mb-10">
           {categorias.map((categoria) => (
             <button
@@ -109,18 +171,35 @@ const ProductosSection = () => {
                   <ProductSkeleton />
                 </div>
               ))
+            ) : productosFiltrados.length === 0 ? (
+              <div className="md:col-span-2 text-center py-10">
+                <p className="text-gray-500">No se encontraron productos para su búsqueda.</p>
+              </div>
             ) : (
               // Mostrar productos una vez cargados
-              productosFiltrados.map((producto) => (
-                <div key={producto.id}>
-                  <CardProducto
-                    {...producto}
-                    cantidad={carrito[producto.id] || 0}
-                    onSumar={() => handleSumar(producto.id)}
-                    onRestar={() => handleRestar(producto.id)}
-                  />
-                </div>
-              ))
+              <>
+                {productosParaMostrar.map((producto) => (
+                  <div key={producto.id}>
+                    <CardProducto
+                      {...producto}
+                      cantidad={carrito[producto.id] || 0}
+                      onSumar={() => handleSumar(producto.id)}
+                      onRestar={() => handleRestar(producto.id)}
+                    />
+                  </div>
+                ))}
+                {productosFiltrados.length > cantidadVisible && (
+                  <div className="md:col-span-2 flex justify-center mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setCantidadVisible(prev => prev + INCREMENTO_LISTA)}
+                      className="px-6 py-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium border border-gray-300"
+                    >
+                      Ver más
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
