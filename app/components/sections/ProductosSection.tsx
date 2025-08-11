@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { CardProducto } from '@components/ui/CardProducto';
 import ProductSkeleton from '@components/ui/ProductSkeleton';
 import { productos } from '@data/productos';
+import { useMemo } from 'react';
 import { useCarritoValidation } from '@hooks/useCarritoValidation';
 import { useWhatsapp } from '@hooks/useWhatsapp';
 
@@ -12,6 +13,7 @@ const ProductosSection = () => {
   const [carrito, setCarrito] = useState<{[id:number]: number}>({});
   const [isLoading, setIsLoading] = useState(true);
   const [busqueda, setBusqueda] = useState('');
+  const [busquedaInput, setBusquedaInput] = useState('');
   const INCREMENTO_LISTA = 6; // 3 filas en md (2 col) => 6 ítems
   const [cantidadVisible, setCantidadVisible] = useState(INCREMENTO_LISTA);
   
@@ -38,17 +40,18 @@ const ProductosSection = () => {
 
   const criterio = normalizar(busqueda);
 
-  const productosPorCategoria = categoriaActiva === 'Todos'
-    ? productos
-    : productos.filter(p => p.categoria === categoriaActiva);
+  const productosPorCategoria = useMemo(() => (
+    categoriaActiva === 'Todos' ? productos : productos.filter(p => p.categoria === categoriaActiva)
+  ), [categoriaActiva]);
 
-  const productosFiltrados = criterio
-    ? productosPorCategoria.filter(p =>
-        normalizar(p.titulo).includes(criterio) ||
-        normalizar(p.descripcion).includes(criterio) ||
-        normalizar(p.categoria).includes(criterio)
-      )
-    : productosPorCategoria;
+  const productosFiltrados = useMemo(() => {
+    if (!criterio) return productosPorCategoria;
+    return productosPorCategoria.filter(p =>
+      normalizar(p.titulo).includes(criterio) ||
+      normalizar(p.descripcion).includes(criterio) ||
+      normalizar(p.categoria).includes(criterio)
+    );
+  }, [criterio, productosPorCategoria]);
 
   const productosParaMostrar = productosFiltrados.slice(0, cantidadVisible);
 
@@ -56,6 +59,12 @@ const ProductosSection = () => {
   useEffect(() => {
     setCantidadVisible(INCREMENTO_LISTA);
   }, [categoriaActiva, busqueda]);
+
+  // Debounce del input de búsqueda para reducir renders
+  useEffect(() => {
+    const id = setTimeout(() => setBusqueda(busquedaInput), 250);
+    return () => clearTimeout(id);
+  }, [busquedaInput]);
 
   const handleSumar = (id: number) => {
     setCarrito(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
@@ -77,9 +86,11 @@ const ProductosSection = () => {
   const { sendWhatsAppMessage } = useWhatsapp();
 
   const handleSolicitarCotizacion = () => {
-    const phone = '+5493364010667'; // Número de teléfono de la pescadería
-    const productosMensaje = productosSeleccionados.map(p => `${p.titulo} - Cantidad: ${carrito[p.id]}`).join('\n');
-    const mensaje = `Hola, me gustaría cotizar los siguientes productos:\n${productosMensaje}`;
+    const phone = '+5493364010667';
+    const productosMensaje = productosSeleccionados
+      .map(p => `• ${p.titulo} — Cantidad: ${carrito[p.id]}`)
+      .join('\n');
+    const mensaje = `Hola 👋, quiero hacer un pedido para retirar en local.\n\nProductos:\n${productosMensaje}\n\nNombre y apellido:\nHorario estimado de retiro:\nObservaciones:`;
     sendWhatsAppMessage(phone, mensaje);
   };
 
@@ -87,10 +98,10 @@ const ProductosSection = () => {
     <section id="productos" className="py-8 md:py-14 bg-white">
       <div className="w-full max-w-6xl mx-auto px-4">
         {/* Encabezado con instrucciones claras */}
-        <div className="text-center max-w-3xl mx-auto mb-10">
+            <div className="text-center max-w-3xl mx-auto mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-sky-950 mb-4">Nuestros Productos</h2>
           <p className="text-lg text-gray-700 mb-6">
-            Explore nuestra selección de productos frescos. Para hacer su pedido:
+            Explore nuestra selección de productos frescos. Para pedir por WhatsApp y retirar en local:
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 text-base text-gray-600">
             <div className="flex items-center gap-2">
@@ -121,8 +132,8 @@ const ProductosSection = () => {
               <input
                 id="buscador-productos"
                 type="search"
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
+                value={busquedaInput}
+                onChange={(e) => setBusquedaInput(e.target.value)}
                 placeholder="Buscar por nombre, categoría o descripción"
                 aria-label="Buscar productos"
                 className="w-full pl-10 pr-24 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-gray-800"
@@ -138,7 +149,7 @@ const ProductosSection = () => {
                 </button>
               )}
             </div>
-            <div className="mt-2 text-sm text-gray-600 text-center">
+            <div className="mt-2 text-sm text-gray-600 text-center" aria-live="polite">
               {productosFiltrados.length} resultado{productosFiltrados.length !== 1 ? 's' : ''}
             </div>
           </div>
@@ -203,7 +214,7 @@ const ProductosSection = () => {
             )}
           </div>
 
-          {/* Panel de Resumen y Cotización */}
+           {/* Panel de Resumen y WhatsApp */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Resumen del Pedido</h3>
@@ -240,7 +251,7 @@ const ProductosSection = () => {
                   </div>
                 )}
                 
-                {/* Botón de cotización */}
+                {/* Botón de WhatsApp */}
                 <button
                   onClick={handleSolicitarCotizacion}
                   disabled={productosSeleccionados.length === 0 || hasErrors}
@@ -252,7 +263,7 @@ const ProductosSection = () => {
                     'Revise los errores'
                   ) : (
                     <>
-                      Solicitar Cotización
+                      Pedir por WhatsApp
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
@@ -264,7 +275,7 @@ const ProductosSection = () => {
               {/* Nota informativa */}
               <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                 <p className="text-sm text-blue-800">
-                  <span className="font-medium">Nota:</span> Los precios se cotizarán según disponibilidad y mercado. Nos contactaremos con usted para confirmar su pedido.
+                  <span className="font-medium">Nota:</span> No realizamos envíos. El pedido se retira en local. Los precios se confirman por WhatsApp según disponibilidad.
                 </p>
               </div>
             </div>

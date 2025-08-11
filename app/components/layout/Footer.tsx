@@ -25,11 +25,12 @@ export const Footer = () => {
       ],
     },
     {
-      title: 'Horarios',
+      title: 'Horarios y retiro',
       content: [
         'Lunes a Viernes: 8:00 - 20:00',
         'Sábados: 8:00 - 14:00',
         'Domingos: Cerrado',
+        'Retiro en local – No realizamos envíos',
       ],
     },
   ];
@@ -55,8 +56,8 @@ export const Footer = () => {
               </div>
             </Link>
             <p className="text-white/80 text-sm leading-relaxed">
-              Ofrecemos la mejor selección de productos del mar, 
-              garantizando frescura y calidad garantizada en cada entrega.
+              Ofrecemos la mejor selección de productos del mar. Retiro en local. 
+              Atención a mayoristas y particulares.
             </p>
             <nav aria-label="Redes sociales">
               <div className="flex space-x-4">
@@ -158,8 +159,7 @@ export const Footer = () => {
                     (336) 44133822
                   </a>
                 </li>
-
-                <li>Belgrano y 9 de Julio</li>
+                <li>Belgrano y 9 de Julio, San Nicolás</li>
               </ul>
             </address>
           </div>

@@ -11,14 +11,14 @@ const RecetasSection = () => {
 
   const recetasFiltradas = categoriaActiva === "Todas" 
     ? recetas 
-    : recetas.filter(receta => receta.complexity === categoriaActiva);
+    : recetas.filter(receta => receta.complexity === categoriaActiva || receta.categoria === categoriaActiva);
 
-  // Mostrar solo 9 recetas (3 filas) cuando está en "Todas" y no se ha hecho clic en "Ver más"
-  const recetasAMostrar = categoriaActiva === "Todas" && !mostrarTodas 
+  // Mostrar solo 9 recetas (3 filas) cuando no se ha hecho clic en "Ver más"
+  const recetasAMostrar = !mostrarTodas 
     ? recetasFiltradas.slice(0, 9) 
     : recetasFiltradas;
 
-  const hayMasRecetas = categoriaActiva === "Todas" && recetasFiltradas.length > 9 && !mostrarTodas;
+  const hayMasRecetas = recetasFiltradas.length > 9 && !mostrarTodas;
 
   const stats = {
     total: recetas.length,
@@ -40,7 +40,7 @@ const RecetasSection = () => {
           <h2 className="text-3xl md:text-4xl font-playfair font-bold text-gradient text-center leading-title-relaxed py-2">
             Cocina Fácil y Nutritiva
           </h2>
-          <p className="text-base text-center max-w-3xl mx-auto">
+          <p className="text-base text-center max-w-3xl mx-auto" aria-live="polite">
             Descubre recetas simples y saludables para aprovechar al máximo la frescura y calidad de nuestros productos del mar. 
             Desde opciones rápidas hasta platos gourmet para ocasiones especiales.
           </p>
@@ -133,7 +133,7 @@ const RecetasSection = () => {
         )}
 
         {/* Mensaje cuando no hay recetas */}
-        {recetasAMostrar.length === 0 && (
+        {recetasFiltradas.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

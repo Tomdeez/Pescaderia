@@ -1,5 +1,5 @@
 export default function Head() {
-  const description = "Pescadería premium especializada en pescados y mariscos frescos de mar y río. Productos de alta calidad para mayoristas y minoristas. Envíos a todo el país.";
+  const description = "Pescadería premium especializada en pescados y mariscos frescos de mar y río. Productos de alta calidad para mayoristas y minoristas. Retiro en local (sin envíos).";
   const title = "Estrellita de Mar – Pescadería Premium | Pescados y Mariscos Frescos";
   const domain = "https://tudominio.vercel.app";
 
@@ -19,7 +19,7 @@ export default function Head() {
       {/* Etiquetas Open Graph mejoradas */}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={`${domain}/imagenes/og-image.jpg`} />
+      <meta property="og:image" content={`${domain}/imagenes/pesfrescohielo.jpg`} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={domain} />
       <meta property="og:site_name" content="Estrellita de Mar" />
@@ -28,7 +28,7 @@ export default function Head() {
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={`${domain}/imagenes/og-image.jpg`} />
+      <meta name="twitter:image" content={`${domain}/imagenes/pesfrescohielo.jpg`} />
       
       {/* Metadatos adicionales */}
       <meta name="format-detection" content="telephone=no" />

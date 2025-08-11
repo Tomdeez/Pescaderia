@@ -24,7 +24,7 @@ const ContactoSection = () => {
             viewport={{ once: true }}
             className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto"
           >
-            Respondemos rápido. Asesoramiento personalizado para mayoristas y clientes particulares.
+            Respondemos rápido. Asesoramiento personalizado para mayoristas y clientes particulares. Retiro en local (no realizamos envíos por el momento).
           </motion.p>
         </div>
 
@@ -54,7 +54,7 @@ const ContactoSection = () => {
               
               {/* WhatsApp Button para Minorista */}
               <motion.a
-                href="https://wa.me/5493364010667"
+                href="https://wa.me/5493364010667?text=Hola%20%F0%9F%91%8B%2C%20quiero%20hacer%20un%20pedido%20para%20retirar%20en%20local.%20Mi%20nombre%20es%3A%20"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
@@ -93,7 +93,7 @@ const ContactoSection = () => {
               
               {/* WhatsApp Button para Mayorista */}
               <motion.a
-                href="https://wa.me/5493364562480"
+                href="https://wa.me/5493364562480?text=Hola%20%F0%9F%91%8B%2C%20quisiera%20lista%20de%20precios%20mayorista%20y%20disponibilidad.%20Retiro%20en%20local.%20Mi%20nombre%20es%3A%20"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}

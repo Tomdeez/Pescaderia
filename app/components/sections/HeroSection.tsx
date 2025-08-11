@@ -101,7 +101,7 @@ export const HeroSection = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Contactar
+                Pedir por WhatsApp
               </motion.a>
             </motion.div>
           </motion.div>

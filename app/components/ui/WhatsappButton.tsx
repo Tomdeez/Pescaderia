@@ -3,17 +3,16 @@
 import { ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/solid';
 
 interface WhatsappButtonProps {
-  phone: string;
-  message: string;
+  phone?: string;
+  message?: string;
 }
 
 export const WhatsappButton = ({ phone, message }: WhatsappButtonProps) => {
   const handleWhatsappClick = () => {
-    // Limpiar el número de teléfono (remover espacios, guiones, etc.)
-    const cleanPhone = phone.replace(/[^\d]/g, '');
-    
-    // Codificar el mensaje para URL
-    const encodedMessage = encodeURIComponent(message);
+    const fallbackPhone = '5493364010667';
+    const cleanPhone = (phone || fallbackPhone).replace(/[^\d]/g, '');
+    const defaultMessage = 'Hola %F0%9F%91%8B%2C quiero hacer un pedido para retirar en local. Mi nombre es%3A ';
+    const encodedMessage = message ? encodeURIComponent(message) : defaultMessage;
     
     // Crear la URL de WhatsApp Web
     const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;

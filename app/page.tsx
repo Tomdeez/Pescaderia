@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import { WhatsappButton } from "@components/ui/WhatsappButton";
 import { Suspense } from 'react';
 import { HeroSection } from "@components/sections/HeroSection";
 
@@ -25,6 +26,11 @@ const ContactoSection = dynamic(() => import("@components/sections/ContactoSecti
   ssr: true
 });
 
+const MenuDelDiaSection = dynamic(() => import("@components/sections/MenuDelDiaSection"), {
+  loading: () => <LoadingSpinner />,
+  ssr: true
+});
+
 export default function LandingPage() {
   return (
     <>
@@ -38,6 +44,15 @@ export default function LandingPage() {
           >
             <Suspense fallback={<LoadingSpinner />}>
               <ProductosSection />
+            </Suspense>
+          </section>
+
+          <section 
+            id="menu"
+            aria-label="Sección de Menú del día"
+          >
+            <Suspense fallback={<LoadingSpinner />}>
+              <MenuDelDiaSection />
             </Suspense>
           </section>
           
@@ -70,6 +85,7 @@ export default function LandingPage() {
           </section>
         </article>
       </main>
+      <WhatsappButton />
     </>
   );
 } 

@@ -73,7 +73,7 @@ export const Navbar = () => {
                     : 'bg-accent hover:bg-accent-light text-white shadow-xl'
                 }`}
               >
-                Hacer Pedido
+                Pedir por WhatsApp
               </Link>
             </div>
 

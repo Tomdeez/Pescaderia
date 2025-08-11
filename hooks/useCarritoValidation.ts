@@ -5,9 +5,11 @@ interface ValidationErrors {
   messages: string[];
 }
 
+import type { Producto } from '@data/productos';
+
 interface UseCarritoValidationProps {
   carrito: { [id: number]: number };
-  productos: any[]; // Ajusta el tipo según tu interfaz de productos
+  productos: Producto[];
 }
 
 export const useCarritoValidation = ({ carrito, productos }: UseCarritoValidationProps) => {
@@ -21,23 +23,28 @@ export const useCarritoValidation = ({ carrito, productos }: UseCarritoValidatio
       newErrors.push("Debe seleccionar al menos un producto");
     }
 
-    // Validar cantidades máximas por producto
+    // Límites de negocio
+    const MAX_POR_PRODUCTO = 50;
+    const MAX_POR_PRODUCTO_BAJO_PEDIDO = 20;
+    const MAX_TOTAL = 100;
+
+    // Validar cantidades por producto
     Object.entries(carrito).forEach(([id, cantidad]) => {
       const producto = productos.find(p => p.id === Number(id));
       if (producto) {
-        if (cantidad > 50) {
-          newErrors.push(`La cantidad máxima para ${producto.titulo} es 50 unidades`);
+        if (cantidad > MAX_POR_PRODUCTO) {
+          newErrors.push(`La cantidad máxima para ${producto.titulo} es ${MAX_POR_PRODUCTO} unidades`);
         }
-        if (producto.disponibilidad === 'Bajo Pedido' && cantidad > 20) {
-          newErrors.push(`Los productos bajo pedido tienen un límite de 20 unidades (${producto.titulo})`);
+        if (producto.disponibilidad === 'Bajo Pedido' && cantidad > MAX_POR_PRODUCTO_BAJO_PEDIDO) {
+          newErrors.push(`Los productos bajo pedido tienen un límite de ${MAX_POR_PRODUCTO_BAJO_PEDIDO} unidades (${producto.titulo})`);
         }
       }
     });
 
     // Validar cantidad total de productos
     const cantidadTotal = Object.values(carrito).reduce((sum, cantidad) => sum + cantidad, 0);
-    if (cantidadTotal > 100) {
-      newErrors.push("El pedido no puede exceder las 100 unidades en total");
+    if (cantidadTotal > MAX_TOTAL) {
+      newErrors.push(`El pedido no puede exceder las ${MAX_TOTAL} unidades en total`);
     }
 
     setErrors({

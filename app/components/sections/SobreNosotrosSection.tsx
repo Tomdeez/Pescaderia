@@ -23,7 +23,7 @@ const SobreNosotrosSection = () => {
           Nuestra Historia y Compromiso
         </h2>
         <p className="text-lg md:text-xl text-slate-700 mb-12 max-w-3xl mx-auto text-center">
-          Desde hace más de 15 años, Estrellita de Mar se ha convertido en la pescadería de confianza para familias y comercios en San Nicolás. Ofrecemos productos frescos de mar y río de la más alta calidad.
+          Desde hace más de 15 años, Estrellita de Mar es la pescadería de confianza para familias y comercios en San Nicolás. Productos frescos de mar y río de la más alta calidad. Retiro en local, atención personalizada.
         </p>
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
