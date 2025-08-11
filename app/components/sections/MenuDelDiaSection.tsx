@@ -8,6 +8,7 @@ function ImageWithFallback({ src, alt }: { src: string; alt: string }) {
   const candidates = useMemo(() => {
     const list = new Set<string>();
     list.add(src);
+    
     // Variantes numeradas comunes: " nombre 1", "-1" antes de la extensión
     const dotIndex = src.lastIndexOf('.');
     if (dotIndex > 0) {
@@ -18,12 +19,16 @@ function ImageWithFallback({ src, alt }: { src: string; alt: string }) {
         list.add(`${base}-${i}${ext}`);
       }
     }
+    
+    // Intercambiar entre directorios images e imagenes
     if (src.startsWith('/images/')) {
       list.add(src.replace('/images/', '/imagenes/'));
     }
     if (src.startsWith('/imagenes/')) {
       list.add(src.replace('/imagenes/', '/images/'));
     }
+    
+    // Intercambiar entre extensiones de imagen
     if (src.endsWith('.jpg')) {
       list.add(src.replace(/\.jpg$/, '.jpeg'));
       list.add(src.replace(/\.jpg$/, '.png'));
@@ -36,11 +41,25 @@ function ImageWithFallback({ src, alt }: { src: string; alt: string }) {
       list.add(src.replace(/\.png$/, '.jpg'));
       list.add(src.replace(/\.png$/, '.jpeg'));
     }
+    
     return Array.from(list);
   }, [src]);
 
   const [index, setIndex] = useState(0);
+  const [hasError, setHasError] = useState(false);
   const current = candidates[index] ?? src;
+
+  // Si todas las imágenes fallan, mostrar un placeholder
+  if (hasError && index >= candidates.length - 1) {
+    return (
+      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+        <div className="text-center text-gray-500">
+          <div className="text-4xl mb-2">🍽️</div>
+          <p className="text-sm">Imagen no disponible</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Image
@@ -53,6 +72,8 @@ function ImageWithFallback({ src, alt }: { src: string; alt: string }) {
       onError={() => {
         if (index < candidates.length - 1) {
           setIndex(index + 1);
+        } else {
+          setHasError(true);
         }
       }}
     />
@@ -124,16 +145,27 @@ function MiniCarrusel({ imagenes, etiquetaDia }: { imagenes: string[]; etiquetaD
 
   return (
     <div
-      className="relative w-full aspect-[16/9] cursor-zoom-in"
+      className="relative w-full aspect-[16/9] cursor-zoom-in transition-transform duration-200 hover:scale-[1.02] group"
       role="button"
       tabIndex={0}
       onClick={openLightbox}
       onKeyDown={onContainerKey}
     >
       <ImageWithFallback src={imagenes[active]} alt={`Menú del día - ${etiquetaDia}${total > 1 ? ` (${active + 1}/${total})` : ''}`} />
+      
+      {/* Overlay con indicador de zoom */}
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center">
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white/90 rounded-full p-3 shadow-lg">
+          <svg className="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+          </svg>
+        </div>
+      </div>
+      
       <div className="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-md text-sm font-semibold text-sky-900 shadow">
         {etiquetaDia}
       </div>
+      
       {total > 1 && (
         <>
           <button
@@ -170,10 +202,10 @@ function MiniCarrusel({ imagenes, etiquetaDia }: { imagenes: string[]; etiquetaD
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4 md:p-6"
+          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 md:p-6"
           onClick={() => setIsOpen(false)}
         >
-          <div className="relative w-full h-full max-w-5xl max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
+          <div className="relative w-full h-full max-w-6xl max-h-[95vh]" onClick={(e) => e.stopPropagation()}>
             <Image
               src={imagenes[active]}
               alt={`Vista ampliada - ${etiquetaDia}`}
@@ -182,14 +214,27 @@ function MiniCarrusel({ imagenes, etiquetaDia }: { imagenes: string[]; etiquetaD
               className="object-contain"
               priority
             />
+            
+            {/* Botón de cerrar mejorado */}
             <button
               type="button"
               aria-label="Cerrar"
               onClick={() => setIsOpen(false)}
-              className="absolute top-3 right-3 md:top-4 md:right-4 bg-white/90 hover:bg-white rounded-full w-9 h-9 grid place-items-center shadow"
+              className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full w-12 h-12 grid place-items-center shadow-lg transition-all duration-200 hover:scale-110"
             >
-              ✕
+              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
+            
+            {/* Información de la imagen */}
+            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-lg">
+              <p className="text-sm font-medium text-gray-800">{etiquetaDia}</p>
+              {total > 1 && (
+                <p className="text-xs text-gray-600">{active + 1} de {total}</p>
+              )}
+            </div>
+            
             {total > 1 && (
               <>
                 <button
@@ -199,9 +244,11 @@ function MiniCarrusel({ imagenes, etiquetaDia }: { imagenes: string[]; etiquetaD
                     e.stopPropagation();
                     go(-1);
                   }}
-                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full w-10 h-10 grid place-items-center shadow"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full w-12 h-12 grid place-items-center shadow-lg transition-all duration-200 hover:scale-110"
                 >
-                  ‹
+                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
                 </button>
                 <button
                   type="button"
@@ -210,9 +257,11 @@ function MiniCarrusel({ imagenes, etiquetaDia }: { imagenes: string[]; etiquetaD
                     e.stopPropagation();
                     go(1);
                   }}
-                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full w-10 h-10 grid place-items-center shadow"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full w-12 h-12 grid place-items-center shadow-lg transition-all duration-200 hover:scale-110"
                 >
-                  ›
+                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </button>
               </>
             )}
@@ -250,6 +299,7 @@ const MenuDelDiaSection = () => {
         <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-sky-950">Menú del día</h2>
           <p className="text-gray-600 mt-2">Hoy y mañana, cocina casera lista para llevar.</p>
+          <p className="text-sky-600 mt-2 text-sm font-medium">💡 Haz clic en las imágenes para verlas en tamaño completo</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
