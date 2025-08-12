@@ -260,5 +260,12 @@ body {
   }
 }
 
+/* Estilos específicos para la barra de navegación en pantallas pequeñas */
+@media (max-width: 1024px) {
+  .container-custom {
+    padding: 0 0.75rem;
+  }
+}
+
  
  

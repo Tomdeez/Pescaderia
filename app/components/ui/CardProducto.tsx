@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { ProductPlaceholder } from './ProductPlaceholder';
 
 interface CardProductoProps {
   imagen: string;
@@ -34,6 +35,9 @@ export const CardProducto = ({
 
   const [imageLoaded, setImageLoaded] = useState(false);
 
+  // Determinar si es una URL o un placeholder
+  const isPlaceholder = !imagen || imagen === 'placeholder';
+
   return (
     <motion.article
       className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
@@ -47,19 +51,26 @@ export const CardProducto = ({
     >
       {/* Imagen con tamaño fijo para mejor consistencia */}
       <div className="relative h-48 overflow-hidden bg-gray-100">
-        <Image
-          src={imagen}
-          alt={`Imagen de ${titulo}`}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          priority={false}
-          loading="lazy"
-          className={`object-cover transition-opacity duration-300 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          onLoad={() => setImageLoaded(true)}
-          quality={85}
-        />
+        {isPlaceholder ? (
+          <ProductPlaceholder categoria={categoria} titulo={titulo} />
+        ) : (
+          <Image
+            src={imagen}
+            alt={`Imagen de ${titulo}`}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={false}
+            loading="lazy"
+            className={`object-cover transition-opacity duration-300 ${
+              imageLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            onLoad={() => setImageLoaded(true)}
+            quality={80}
+            onError={() => {
+              console.log('Error al cargar imagen:', imagen);
+            }}
+          />
+        )}
         <div className="absolute top-2 right-2">
           <span className={`px-3 py-1 rounded-lg text-sm font-medium ${disponibilidadColor} shadow-sm`}>
             {disponibilidad}

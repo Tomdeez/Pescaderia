@@ -13,3 +13,5 @@ export const menuDelDia: MenuDia[] = [
   { dia: 'Viernes', imagenes: ['/imagenes/viernes.jpeg'] },
   { dia: 'Sábado', imagenes: ['/imagenes/sabado.jpeg'] },
 ];
+
+

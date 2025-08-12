@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { navLinks } from '@data/navLinks';
+import { navLinks, navLinksCompact } from '@data/navLinks';
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -24,8 +24,8 @@ export const Navbar = () => {
         aria-label="Principal"
         className={`fixed w-full z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/98 backdrop-blur-md shadow-xl py-2'
-            : 'bg-black/20 backdrop-blur-sm py-3'
+            ? 'bg-sky-950 shadow-xl py-1'
+            : 'bg-sky-950 shadow-lg py-2 border-b border-sky-900'
         }`}
       >
         <div className="container-custom">
@@ -36,44 +36,54 @@ export const Navbar = () => {
                 <Image
                   src="/imagenes/Claro sin txt.png"
                   alt="Isotipo Estrellita de Mar"
-                  width={90}
-                  height={90}
+                  width={50}
+                  height={50}
                   priority
-                  sizes="96px"
-                  className="rounded-full bg-white shadow-xl"
+                  sizes="50px"
+                  className="rounded-full bg-white shadow-md"
                 />
-                <span className={`font-playfair text-xl font-bold transition-colors duration-300 ${
-                  isScrolled ? 'text-primary' : 'text-white drop-shadow-lg'
-                }`}>
+                <span className={`font-playfair text-base lg:text-lg font-bold transition-colors duration-300 text-white drop-shadow-lg whitespace-nowrap`}>
                   Estrellita de Mar
                 </span>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`text-sm uppercase tracking-wider font-semibold transition-colors duration-300 hover:scale-105 transform ${
-                    isScrolled 
-                      ? 'text-gray-600 hover:text-primary' 
-                      : 'text-white hover:text-accent drop-shadow-lg'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <div className="hidden md:flex items-center space-x-2 lg:space-x-4">
+              {/* Enlaces compactos para pantallas medianas */}
+              <div className="md:flex lg:hidden items-center space-x-1">
+                {navLinksCompact.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`text-xs uppercase tracking-wide font-semibold transition-colors duration-300 hover:text-amber-300 text-white px-1 whitespace-nowrap drop-shadow-sm`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+              
+              {/* Enlaces completos para pantallas grandes */}
+              <div className="hidden lg:flex items-center space-x-4">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`text-sm uppercase tracking-wide font-semibold transition-colors duration-300 hover:text-amber-300 text-white px-1 whitespace-nowrap drop-shadow-sm`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
               <Link
                 href="#contacto"
-                className={`px-6 py-2 rounded-lg text-sm uppercase tracking-wider font-semibold transition-all duration-300 hover:scale-105 transform ${
+                className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm uppercase tracking-wide font-bold transition-all duration-300 whitespace-nowrap ${
                   isScrolled
-                    ? 'bg-primary hover:bg-primary-light text-white shadow-lg'
-                    : 'bg-accent hover:bg-accent-light text-white shadow-xl'
+                    ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg border border-white/30'
+                    : 'bg-amber-500 hover:bg-amber-600 text-sky-950 shadow-lg border border-white/30'
                 }`}
               >
-                Pedir por WhatsApp
+                PEDIR POR WHATSAPP
               </Link>
             </div>
 
@@ -89,17 +99,17 @@ export const Navbar = () => {
                 <span
                   className={`block w-8 h-0.5 transform transition duration-300 ${
                     isMobileMenuOpen ? 'rotate-45 translate-y-2.5' : ''
-                  } ${isScrolled ? 'bg-gray-600' : 'bg-white'}`}
+                  } bg-white`}
                 />
                 <span
                   className={`block w-8 h-0.5 transition duration-300 ${
                     isMobileMenuOpen ? 'opacity-0' : ''
-                  } ${isScrolled ? 'bg-gray-600' : 'bg-white'}`}
+                  } bg-white`}
                 />
                 <span
                   className={`block w-8 h-0.5 transform transition duration-300 ${
                     isMobileMenuOpen ? '-rotate-45 -translate-y-2.5' : ''
-                  } ${isScrolled ? 'bg-gray-600' : 'bg-white'}`}
+                  } bg-white`}
                 />
               </div>
             </button>
@@ -108,16 +118,16 @@ export const Navbar = () => {
           {/* Mobile Menu */}
           <div
             id="mobile-nav"
-            className={`fixed inset-0 bg-white/98 backdrop-blur-md transition-transform duration-300 ease-in-out ${
+            className={`fixed inset-0 bg-sky-950/98 backdrop-blur-md transition-transform duration-300 ease-in-out ${
               isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
             } md:hidden`}
           >
-            <div className="flex flex-col items-center justify-center h-full space-y-8">
+            <div className="flex flex-col items-center justify-center h-full space-y-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-lg font-semibold text-gray-600 hover:text-primary transition-colors duration-300"
+                  className="text-base uppercase tracking-wide font-medium text-white hover:text-amber-300 transition-colors duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -125,10 +135,10 @@ export const Navbar = () => {
               ))}
               <Link
                 href="#contacto"
-                className="px-8 py-3 bg-primary hover:bg-primary-light text-white font-semibold rounded-lg transition-all duration-300 shadow-lg"
+                className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-medium uppercase tracking-wide rounded-lg transition-all duration-300 shadow-lg"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Hacer Pedido
+                PEDIR POR WHATSAPP
               </Link>
             </div>
           </div>
@@ -136,4 +146,4 @@ export const Navbar = () => {
       </nav>
     </header>
   );
-}; 
+};

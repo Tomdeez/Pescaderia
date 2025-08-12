@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { WhatsappButton } from "@components/ui/WhatsappButton";
 import { Suspense } from 'react';
 import { HeroSection } from "@components/sections/HeroSection";
+import SkipToContent from '@components/ui/SkipToContent';
 
 const LoadingSpinner = dynamic(() => import("@components/ui/LoadingSpinner"));
 
@@ -31,16 +32,25 @@ const MenuDelDiaSection = dynamic(() => import("@components/sections/MenuDelDiaS
   ssr: true
 });
 
+const PromocionesSection = dynamic(() => import("@components/sections/PromocionesSection"), {
+  loading: () => <LoadingSpinner />,
+  ssr: true
+});
+
 export default function LandingPage() {
   return (
     <>
+      {/* Enlace de accesibilidad para saltar al contenido principal */}
+      <SkipToContent />
+      
       <HeroSection />
-      <main role="main" className="flex-grow">
+      <main id="main-content" role="main" className="flex-grow">
         <article className="flex flex-col gap-16">
           <section 
             id="productos" 
             className="bg-slate-50"
             aria-label="Sección de Productos"
+            tabIndex={-1} // Permite que la sección sea enfocada al navegar
           >
             <Suspense fallback={<LoadingSpinner />}>
               <ProductosSection />
@@ -50,6 +60,7 @@ export default function LandingPage() {
           <section 
             id="menu"
             aria-label="Sección de Menú del día"
+            tabIndex={-1}
           >
             <Suspense fallback={<LoadingSpinner />}>
               <MenuDelDiaSection />
@@ -59,15 +70,28 @@ export default function LandingPage() {
           <section 
             id="recetas"
             aria-label="Sección de Recetas"
+            tabIndex={-1}
           >
             <Suspense fallback={<LoadingSpinner />}>
               <RecetasSection />
             </Suspense>
           </section>
           
+          {/* Sección de promociones */}
+          <section
+            id="ofertas"
+            aria-label="Promociones"
+            tabIndex={-1}
+          >
+            <Suspense fallback={<LoadingSpinner />}>
+              <PromocionesSection />
+            </Suspense>
+          </section>
+          
           <section 
             id="distribuidora"
             aria-label="Sección de Distribuidora"
+            tabIndex={-1}
           >
             <Suspense fallback={<LoadingSpinner />}>
               <DistribuidoraSection />
@@ -78,6 +102,7 @@ export default function LandingPage() {
             id="contacto" 
             className="bg-slate-50"
             aria-label="Sección de Contacto"
+            tabIndex={-1}
           >
             <Suspense fallback={<LoadingSpinner />}>
               <ContactoSection />

@@ -80,206 +80,285 @@ function ImageWithFallback({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-function useHoyYManiana() {
-  const ordenDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-  const date = new Date();
-  const day = date.getDay(); // 0 = Domingo, 1 = Lunes, ... 6 = Sábado
-  let hoyName: string | null = null;
-  let manianaName: string | null = null;
-  let hoyEtiqueta = 'Hoy';
-  let mananaEtiqueta = 'Mañana';
+// Modal global (único para toda la aplicación)
+type ModalState = {
+  isOpen: boolean;
+  src: string | null;
+  alt: string;
+};
 
-  if (day === 0) {
-    // Domingo: no hay menú; mostrar lunes y martes como próximos
-    hoyName = 'Lunes';
-    manianaName = 'Martes';
-    hoyEtiqueta = 'Próximo';
-    mananaEtiqueta = 'Siguiente';
-  } else if (day >= 1 && day <= 5) {
-    hoyName = ordenDias[day - 1];
-    const idx = day - 1;
-    manianaName = ordenDias[(idx + 1) % ordenDias.length];
-  } else if (day === 6) {
-    // Sábado: solo mostrar hoy. Mañana (domingo) no hay menú.
-    hoyName = 'Sábado';
-    manianaName = null;
-    hoyEtiqueta = 'Hoy';
+let modalListeners: ((state: ModalState) => void)[] = [];
+let currentModal: ModalState = { isOpen: false, src: null, alt: '' };
+
+function showImage(src: string, alt: string) {
+  // Para depuración
+  console.log('showImage llamado con:', src);
+  
+  // Asegurar que se ejecuta en el cliente
+  if (typeof window !== 'undefined') {
+    currentModal = { isOpen: true, src, alt };
+    modalListeners.forEach(listener => listener({ ...currentModal }));
+    document.body.style.overflow = 'hidden'; // Bloquear scroll
+    
+    // Para depuración
+    console.log('Estado del modal actualizado:', currentModal);
   }
+}
 
-  return { hoyName, manianaName, hoyEtiqueta, mananaEtiqueta };
+function closeModal() {
+  if (typeof window !== 'undefined') {
+    currentModal = { ...currentModal, isOpen: false };
+    modalListeners.forEach(listener => listener({ ...currentModal }));
+    document.body.style.overflow = ''; // Restaurar scroll
+  }
+}
+
+function useImageModal() {
+  const [state, setState] = useState<ModalState>(currentModal);
+  
+  useEffect(() => {
+    function handleUpdate(newState: ModalState) {
+      setState(newState);
+    }
+    
+    modalListeners.push(handleUpdate);
+    return () => {
+      modalListeners = modalListeners.filter(l => l !== handleUpdate);
+    };
+  }, []);
+  
+  return state;
+}
+
+// Componente de Modal (se usa solo una vez en la aplicación)
+function ImageModal() {
+  const { isOpen, src, alt } = useImageModal();
+  
+  // Para depuración
+  useEffect(() => {
+    console.log('ImageModal renderizado, isOpen:', isOpen, 'src:', src);
+  }, [isOpen, src]);
+  
+  // Cerrar con ESC
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    function handleEsc(e: KeyboardEvent) {
+      if (e.key === 'Escape') closeModal();
+    }
+    
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isOpen]);
+  
+  // Si no está abierto, no renderizamos nada
+  if (!isOpen) {
+    return null;
+  }
+  
+  // Función para manejar el cierre
+  const handleClose = (e: React.MouseEvent) => {
+    e.preventDefault();
+    closeModal();
+  };
+  
+  return (
+    <div 
+      className="fixed inset-0 z-[9999] bg-black/85 flex items-center justify-center p-4" 
+      onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Imagen ampliada"
+    >
+      <div 
+        className="relative max-w-[98%] max-h-[95vh] overflow-hidden flex items-center justify-center"
+        onClick={e => e.stopPropagation()}
+      >
+        {src && (
+          <img 
+            src={src} 
+            alt={alt} 
+            className="max-w-full max-h-[90vh] object-contain shadow-2xl" 
+          />
+        )}
+        
+        {/* Botón de cerrar */}
+        <button
+          type="button"
+          className="absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          onClick={handleClose}
+          aria-label="Cerrar"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function MenuImage({ src, alt, etiquetaDia }: { src: string; alt: string; etiquetaDia: string }) {
+  // Función directa para mostrar la imagen
+  const handleShowImage = () => {
+    console.log('Mostrando imagen:', src);
+    showImage(src, alt);
+  };
+
+  return (
+    <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden group">
+      {/* Imagen con respaldo */}
+      <div className="absolute inset-0">
+        <ImageWithFallback src={src} alt={alt} />
+      </div>
+      
+      {/* Overlay al pasar el mouse - con evento de clic mejorado */}
+      <button 
+        type="button"
+        onClick={handleShowImage}
+        className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors duration-200 
+                 cursor-pointer flex items-center justify-center border-0"
+        aria-label={`Ampliar imagen de ${etiquetaDia}`}
+      >
+        <div className="opacity-0 group-hover:opacity-100 transform group-hover:scale-110 transition-all duration-300 
+                     bg-white/90 rounded-full p-3 shadow-lg">
+          <svg className="w-7 h-7 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+          </svg>
+        </div>
+      </button>
+      
+      {/* Etiqueta del día */}
+      <div className="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-md text-sm font-semibold text-sky-900 shadow z-10">
+        {etiquetaDia}
+      </div>
+      
+      {/* Botón de accesibilidad para ver la imagen */}
+      <div className="absolute bottom-3 right-3 z-10">
+        <button 
+          type="button"
+          onClick={handleShowImage}
+          className="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white px-3 py-2 rounded-md 
+                   shadow-md transition-all duration-200 hover:scale-105 font-medium"
+          title={`Ampliar imagen del menú de ${etiquetaDia}`}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          <span>Ver más grande</span>
+        </button>
+      </div>
+    </div>
+  );
 }
 
 function MiniCarrusel({ imagenes, etiquetaDia }: { imagenes: string[]; etiquetaDia: string }) {
   const [active, setActive] = useState(0);
   const total = imagenes.length;
-  const [isOpen, setIsOpen] = useState(false);
 
   const go = (dir: -1 | 1) => {
     setActive((prev) => (prev + dir + total) % total);
   };
 
-  // Accesibilidad: cerrar con Escape y navegar con flechas en el lightbox
+  // Accesibilidad: navegar con flechas
   useEffect(() => {
-    if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
       if (e.key === 'ArrowLeft') go(-1);
       if (e.key === 'ArrowRight') go(1);
     };
     document.addEventListener('keydown', onKey);
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = originalOverflow;
     };
-  }, [isOpen]);
-
-  const openLightbox = () => setIsOpen(true);
-  const onContainerKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      openLightbox();
-    }
-  };
+  }, []);
 
   return (
-    <div
-      className="relative w-full aspect-[16/9] cursor-zoom-in transition-transform duration-200 hover:scale-[1.02] group"
-      role="button"
-      tabIndex={0}
-      onClick={openLightbox}
-      onKeyDown={onContainerKey}
-    >
-      <ImageWithFallback src={imagenes[active]} alt={`Menú del día - ${etiquetaDia}${total > 1 ? ` (${active + 1}/${total})` : ''}`} />
-      
-      {/* Overlay con indicador de zoom */}
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center">
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white/90 rounded-full p-3 shadow-lg">
-          <svg className="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-          </svg>
-        </div>
-      </div>
-      
-      <div className="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-md text-sm font-semibold text-sky-900 shadow">
-        {etiquetaDia}
-      </div>
+    <div className="relative w-full">
+      <MenuImage 
+        src={imagenes[active]} 
+        alt={`Menú del día - ${etiquetaDia}${total > 1 ? ` (${active + 1}/${total})` : ''}`} 
+        etiquetaDia={etiquetaDia}
+      />
       
       {total > 1 && (
         <>
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              go(-1);
-            }}
-            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full w-8 h-8 grid place-items-center shadow border"
+            onClick={() => go(-1)}
+            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full w-10 h-10 grid place-items-center shadow border z-30"
             aria-label="Anterior"
           >
-            ‹
+            <span className="text-xl">‹</span>
           </button>
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              go(1);
-            }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full w-8 h-8 grid place-items-center shadow border"
+            onClick={() => go(1)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full w-10 h-10 grid place-items-center shadow border z-30"
             aria-label="Siguiente"
           >
-            ›
+            <span className="text-xl">›</span>
           </button>
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+          <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex gap-1 z-30">
             {imagenes.map((_, i) => (
-              <span key={i} className={`h-1.5 rounded-full transition-all ${i === active ? 'w-6 bg-sky-600' : 'w-3 bg-white/80 border'}`} />
+              <button 
+                key={i} 
+                onClick={() => setActive(i)} 
+                className={`h-2 transition-all rounded-full ${i === active ? 'w-8 bg-sky-600' : 'w-4 bg-white/80 border'}`}
+                aria-label={`Ir a imagen ${i+1}`}
+                aria-current={i === active ? "true" : "false"}
+              />
             ))}
           </div>
         </>
-      )}
-
-      {isOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 md:p-6"
-          onClick={() => setIsOpen(false)}
-        >
-          <div className="relative w-full h-full max-w-6xl max-h-[95vh]" onClick={(e) => e.stopPropagation()}>
-            <Image
-              src={imagenes[active]}
-              alt={`Vista ampliada - ${etiquetaDia}`}
-              fill
-              sizes="100vw"
-              className="object-contain"
-              priority
-            />
-            
-            {/* Botón de cerrar mejorado */}
-            <button
-              type="button"
-              aria-label="Cerrar"
-              onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full w-12 h-12 grid place-items-center shadow-lg transition-all duration-200 hover:scale-110"
-            >
-              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            
-            {/* Información de la imagen */}
-            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-lg">
-              <p className="text-sm font-medium text-gray-800">{etiquetaDia}</p>
-              {total > 1 && (
-                <p className="text-xs text-gray-600">{active + 1} de {total}</p>
-              )}
-            </div>
-            
-            {total > 1 && (
-              <>
-                <button
-                  type="button"
-                  aria-label="Anterior"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    go(-1);
-                  }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full w-12 h-12 grid place-items-center shadow-lg transition-all duration-200 hover:scale-110"
-                >
-                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  aria-label="Siguiente"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    go(1);
-                  }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full w-12 h-12 grid place-items-center shadow-lg transition-all duration-200 hover:scale-110"
-                >
-                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </>
-            )}
-          </div>
-        </div>
       )}
     </div>
   );
 }
 
-const MenuDelDiaSection = () => {
-  const { hoyName, manianaName, hoyEtiqueta, mananaEtiqueta } = useHoyYManiana();
-
-  const rawHoy = menuDelDia.find((m) => m.dia === hoyName) ?? null;
-  const rawManiana = menuDelDia.find((m) => m.dia === manianaName) ?? null;
+function MenuDelDiaSection() {
+  // Orden fijo de los días de la semana para mostrar
+  const ordenDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  
+  // Determinar el día de la semana actual
+  const determinarDiaActual = () => {
+    const hoy = new Date();
+    const diaDeLaSemana = hoy.getDay(); // 0 es domingo, 1 es lunes, etc.
+    
+    // Si es domingo (0) o sábado por la tarde, mostrar el lunes
+    if (diaDeLaSemana === 0 || (diaDeLaSemana === 6 && hoy.getHours() >= 14)) {
+      return 0; // Lunes
+    }
+    
+    // Para el resto de días, ajustar el índice (restamos 1 porque nuestro array empieza con Lunes en posición 0)
+    return Math.min(diaDeLaSemana - 1, 5); // Máximo 5 (Sábado)
+  };
+  
+  // Estado para el día seleccionado, inicializado con el día actual
+  const [selectedDayIndex, setSelectedDayIndex] = useState(determinarDiaActual());
+  
+  // Función para navegar entre días
+  const navigateDay = (dir: -1 | 1) => {
+    setSelectedDayIndex((prev) => {
+      const newIndex = prev + dir;
+      // Ciclamos entre 0 y la longitud del array
+      if (newIndex < 0) return ordenDias.length - 1;
+      if (newIndex >= ordenDias.length) return 0;
+      return newIndex;
+    });
+  };
+  
+  // Obtener el día actual basado en el índice seleccionado
+  const currentDay = ordenDias[selectedDayIndex];
+  
+  // Verificar si el día seleccionado es el día actual
+  const isDayToday = selectedDayIndex === determinarDiaActual();
+  
+  // Buscar datos del menú para el día seleccionado
+  const currentDayData = menuDelDia.find((m) => m.dia === currentDay) ?? null;
 
   // Regla solicitada: para Martes, dejar solo la imagen ubicada en `public/images` si existe
-  const filterTuesday = (entry: typeof rawHoy) => {
+  const filterTuesday = (entry: typeof currentDayData) => {
     if (!entry) return null;
     if (entry.dia !== 'Martes') return entry;
     const onlyImagesDir = entry.imagenes.filter((p) => p.startsWith('/images/'));
@@ -290,71 +369,116 @@ const MenuDelDiaSection = () => {
     return { ...entry, imagenes: entry.imagenes.slice(0, 1) };
   };
 
-  const hoyData = filterTuesday(rawHoy);
-  const manianaData = filterTuesday(rawManiana);
+  const currentDayFiltered = filterTuesday(currentDayData);
 
   return (
     <section className="py-16 bg-white" aria-label="Menú del día">
       <div className="container-custom">
         <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-sky-950">Menú del día</h2>
-          <p className="text-gray-600 mt-2">Hoy y mañana, cocina casera lista para llevar.</p>
-          <p className="text-sky-600 mt-2 text-sm font-medium">💡 Haz clic en las imágenes para verlas en tamaño completo</p>
+          <p className="text-gray-600 mt-2">Descubre nuestros menús de toda la semana</p>
+          <p className="text-sky-600 mt-2 text-sm font-medium">
+            💡 Haz clic en "Ver más grande" para ampliar el menú
+          </p>
+        </div>
+        
+        {/* Controles de navegación para toda la semana */}
+        <div className="flex flex-col items-center gap-4 mb-8">
+          <div className="flex justify-center items-center gap-4 mb-2">
+            <button
+              type="button"
+              onClick={() => navigateDay(-1)}
+              className="flex items-center gap-2 bg-sky-50 hover:bg-sky-100 text-sky-700 px-4 py-2 rounded-md shadow-sm transition-colors duration-200"
+              aria-label="Ver día anterior"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="hidden sm:inline">Día anterior</span>
+              <span className="sm:hidden">Anterior</span>
+            </button>
+            
+            <div className={`px-4 py-2 rounded-md shadow-sm relative ${isDayToday ? 'bg-green-100' : 'bg-sky-100'}`}>
+              <span className={`font-semibold ${isDayToday ? 'text-green-800' : 'text-sky-800'}`}>
+                {ordenDias[selectedDayIndex]}
+              </span>
+              
+              {/* Indicador de "Hoy" */}
+              {isDayToday && (
+                <span className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">
+                  HOY
+                </span>
+              )}
+            </div>
+            
+            <button
+              type="button"
+              onClick={() => navigateDay(1)}
+              className="flex items-center gap-2 bg-sky-50 hover:bg-sky-100 text-sky-700 px-4 py-2 rounded-md shadow-sm transition-colors duration-200"
+              aria-label="Ver día siguiente"
+            >
+              <span className="hidden sm:inline">Día siguiente</span>
+              <span className="sm:hidden">Siguiente</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+          
+          {/* Días de la semana en miniatura para navegación rápida */}
+          <div className="flex justify-center space-x-2">
+            {ordenDias.map((dia, index) => (
+              <button
+                key={dia}
+                onClick={() => setSelectedDayIndex(index)}
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all
+                  ${selectedDayIndex === index 
+                    ? 'bg-sky-600 text-white ring-2 ring-sky-300 ring-offset-2' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
+                  ${index === determinarDiaActual() ? 'border-2 border-green-500' : ''}
+                `}
+                aria-label={`Ver menú de ${dia}`}
+                aria-current={selectedDayIndex === index ? 'true' : 'false'}
+                title={dia}
+              >
+                {dia.substring(0, 2)}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          {/* Hoy */}
-          {hoyData ? (
-            <div className="group rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-white">
-              <div className="p-4 pb-0 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-sky-100 text-sky-700 text-sm font-bold">{hoyEtiqueta === 'Hoy' ? 'H' : 'P'}</span>
-                  <h3 className="text-lg font-semibold text-sky-900">{hoyEtiqueta} · {hoyData.dia}</h3>
+        {/* Un solo día centrado */}
+        <div className="flex justify-center">
+          <div className="w-full max-w-3xl">
+            {currentDayFiltered ? (
+              <div className="group rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-white">
+                <div className="p-4 pb-0 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-sky-100 text-sky-700 text-sm font-bold">{currentDayFiltered.dia.charAt(0)}</span>
+                    <h3 className="text-lg font-semibold text-sky-900">{currentDayFiltered.dia}</h3>
+                  </div>
+                  {currentDayFiltered.imagenes.length > 1 && (
+                    <span className="text-xs text-gray-500">{currentDayFiltered.imagenes.length} fotos</span>
+                  )}
                 </div>
-                {hoyData.imagenes.length > 1 && (
-                  <span className="text-xs text-gray-500">{hoyData.imagenes.length} fotos</span>
-                )}
+                <MiniCarrusel imagenes={currentDayFiltered.imagenes} etiquetaDia={currentDayFiltered.dia} />
               </div>
-              <MiniCarrusel imagenes={hoyData.imagenes} etiquetaDia={`${hoyEtiqueta} · ${hoyData.dia}`} />
-            </div>
-          ) : (
-            <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-white p-8 flex items-center justify-center text-center">
-              <div>
-                <div className="text-2xl mb-2">🍽️</div>
-                <p className="text-gray-700 font-medium">Hoy no hay menú disponible</p>
-                {manianaData && <p className="text-gray-500 mt-1">Mirá el menú de mañana</p>}
-              </div>
-            </div>
-          )}
-
-          {/* Mañana */}
-          {manianaData ? (
-            <div className="group rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-white">
-              <div className="p-4 pb-0 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-sky-100 text-sky-700 text-sm font-bold">{mananaEtiqueta === 'Mañana' ? 'M' : 'S'}</span>
-                  <h3 className="text-lg font-semibold text-sky-900">{mananaEtiqueta} · {manianaData.dia}</h3>
+            ) : (
+              <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-white p-8 flex items-center justify-center text-center">
+                <div>
+                  <div className="text-2xl mb-2">🍽️</div>
+                  <p className="text-gray-700 font-medium">No hay menú disponible para {ordenDias[selectedDayIndex]}</p>
                 </div>
-                {manianaData.imagenes.length > 1 && (
-                  <span className="text-xs text-gray-500">{manianaData.imagenes.length} fotos</span>
-                )}
               </div>
-              <MiniCarrusel imagenes={manianaData.imagenes} etiquetaDia={`${mananaEtiqueta} · ${manianaData.dia}`} />
-            </div>
-          ) : (
-            <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-white p-8 flex items-center justify-center text-center">
-              <div>
-                <div className="text-2xl mb-2">🗓️</div>
-                <p className="text-gray-700 font-medium">Pronto publicaremos el menú de mañana</p>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
+      
+      {/* Modal global (único) */}
+      <ImageModal />
     </section>
   );
-};
+}
 
 export default MenuDelDiaSection;
-
-
