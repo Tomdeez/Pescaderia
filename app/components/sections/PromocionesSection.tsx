@@ -8,23 +8,30 @@ const promociones = [
   {
     id: 1,
     titulo: "10% de descuento",
-    descripcion: "En todos los productos abonando en efectivo",
-    imagen: "/imagenes/pesfrescohielo.jpg",
+    descripcion: "En todos los productos abonando en efectivo para compras mayores a $15.000",
+    imagen: "/imagenes/10 efectivo.jpeg",
     etiqueta: "EFECTIVO"
   },
   {
     id: 2,
-    titulo: "Jueves de jubilados",
-    descripcion: "20% de descuento para jubilados todos los jueves",
-    imagen: "/imagenes/jueves.jpeg",
+    titulo: "20% para jubilados",
+    descripcion: "Solo los jueves para compras mayores a $10.000",
+    imagen: "/imagenes/20 jubilados.jpeg",
     etiqueta: "JUEVES"
   },
   {
     id: 3,
-    titulo: "Combos familiares",
-    descripcion: "Consultá por nuestros combos especiales abonando en efectivo",
-    imagen: "/imagenes/picadamar.jpg",
-    etiqueta: "EFECTIVO"
+    titulo: "20% en pescados de río",
+    descripcion: "Promoción especial solo los martes",
+    imagen: "/imagenes/20 pescado rio.jpeg",
+    etiqueta: "MARTES"
+  },
+  {
+    id: 4,
+    titulo: "20% en medallones",
+    descripcion: "Solo los sábados en medallones de pollo o merluza",
+    imagen: "/imagenes/20 medallones.jpeg",
+    etiqueta: "SÁBADOS"
   },
 ];
 
@@ -45,10 +52,20 @@ const PromocionesSection = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {promociones.map((promo) => (
+          {promociones.map((promo, index) => (
             <motion.div
               key={promo.id}
-              className="bg-white rounded-xl overflow-hidden shadow-md border border-gray-100"
+              className={`bg-white rounded-xl overflow-hidden shadow-md border border-gray-100 ${
+                // Centrar el último elemento si está solo en la última fila
+                promociones.length % 3 === 1 && index === promociones.length - 1
+                  ? 'lg:col-start-2'
+                  : ''
+              } ${
+                // Centrar el último elemento en pantallas medianas si está solo en la última fila
+                promociones.length % 2 === 1 && index === promociones.length - 1
+                  ? 'md:col-span-2 md:max-w-md md:mx-auto'
+                  : ''
+              }`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
