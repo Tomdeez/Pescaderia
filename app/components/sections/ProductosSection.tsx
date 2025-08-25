@@ -1,169 +1,222 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CardProducto } from '@components/ui/CardProducto';
-import ProductSkeleton from '@components/ui/ProductSkeleton';
-import { productos } from '@data/productos';
-import { useMemo } from 'react';
-import { useCarritoValidation } from '@hooks/useCarritoValidation';
-import { useWhatsapp } from '@hooks/useWhatsapp';
+import { CardProducto } from '../ui/CardProducto'; // Importación nombrada correcta
+import ProductSkeleton from '../ui/ProductSkeleton';
+import { supabase } from '../../../utils/supabaseClient';
+
+// Interfaz para los productos
+interface Producto {
+  id: number;
+  titulo: string;
+  descripcion: string;
+  imagen: string;
+  categoria: string;
+  disponibilidad: 'En Stock' | 'Bajo Pedido' | 'Temporada';
+}
+
+// Constantes para la paginación
+const PRODUCTOS_POR_PAGINA = 6; // Número de productos por página
 
 const ProductosSection = () => {
-  const [categoriaActiva, setCategoriaActiva] = useState('Todos');
-  const [carrito, setCarrito] = useState<{[id:number]: number}>({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [busqueda, setBusqueda] = useState('');
-  const [busquedaInput, setBusquedaInput] = useState('');
-  const INCREMENTO_LISTA = 6; // 3 filas en md (2 col) => 6 ítems
-  const [cantidadVisible, setCantidadVisible] = useState(INCREMENTO_LISTA);
+  const [productos, setProductos] = useState<Producto[]>([]);
+  const [productosMostrados, setProductosMostrados] = useState<Producto[]>([]);
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string>('Todos');
+  const [categorias, setCategorias] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [totalProductos, setTotalProductos] = useState(0);
+  const [cargandoMas, setCargandoMas] = useState(false);
   
-  // Validación del carrito
-  const { hasErrors, messages } = useCarritoValidation({ carrito, productos });
+  // Para compatibilidad con CardProducto que espera onSumar y onRestar
+  const [cantidades, setCantidades] = useState<{[key: number]: number}>({});
   
-  // Simular carga de productos
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Generar categorías dinámicamente
-  const categorias = ['Todos', ...new Set(productos.map(p => p.categoria))];
-
-  // Filtro por categoría y búsqueda (intuitivo y tolerante a mayúsculas/acentos simples)
-  const normalizar = (texto: string) =>
-    texto
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '');
-
-  const criterio = normalizar(busqueda);
-
-  const productosPorCategoria = useMemo(() => (
-    categoriaActiva === 'Todos' ? productos : productos.filter(p => p.categoria === categoriaActiva)
-  ), [categoriaActiva]);
-
-  const productosFiltrados = useMemo(() => {
-    if (!criterio) return productosPorCategoria;
-    return productosPorCategoria.filter(p =>
-      normalizar(p.titulo).includes(criterio) ||
-      normalizar(p.descripcion).includes(criterio) ||
-      normalizar(p.categoria).includes(criterio)
-    );
-  }, [criterio, productosPorCategoria]);
-
-  const productosParaMostrar = productosFiltrados.slice(0, cantidadVisible);
-
-  // Resetear paginación al cambiar categoría o búsqueda
-  useEffect(() => {
-    setCantidadVisible(INCREMENTO_LISTA);
-  }, [categoriaActiva, busqueda]);
-
-  // Debounce del input de búsqueda para reducir renders
-  useEffect(() => {
-    const id = setTimeout(() => setBusqueda(busquedaInput), 250);
-    return () => clearTimeout(id);
-  }, [busquedaInput]);
-
-  const handleSumar = (id: number) => {
-    setCarrito(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
-  };
-  const handleRestar = (id: number) => {
-    setCarrito(prev => {
-      const nuevaCantidad = (prev[id] || 0) - 1;
-      if (nuevaCantidad <= 0) {
-        const nuevo = { ...prev };
-        delete nuevo[id];
-        return nuevo;
-      }
-      return { ...prev, [id]: nuevaCantidad };
+  const handleSumar = (productoId: number) => {
+    setCantidades({
+      ...cantidades,
+      [productoId]: (cantidades[productoId] || 0) + 1
     });
   };
+  
+  const handleRestar = (productoId: number) => {
+    if ((cantidades[productoId] || 0) > 0) {
+      setCantidades({
+        ...cantidades,
+        [productoId]: (cantidades[productoId] || 0) - 1
+      });
+    }
+  };
 
-  const productosSeleccionados = productos.filter(p => carrito[p.id]);
+  // Cargar productos desde Supabase
+  useEffect(() => {
+    async function cargarProductos() {
+      try {
+        setLoading(true);
+        setPaginaActual(1); // Reiniciar paginación al cambiar categoría
+        
+        let query = supabase
+          .from('productos')
+          .select('*', { count: 'exact' })
+        
+        // Filtrar por categoría si no es 'Todos'
+        if (categoriaSeleccionada !== 'Todos') {
+          query = query.eq('categoria', categoriaSeleccionada);
+        }
+        
+        // Primera carga limitada a PRODUCTOS_POR_PAGINA
+        const { data, error, count } = await query
+          .order('id')
+          .range(0, PRODUCTOS_POR_PAGINA - 1);
+        
+        if (error) {
+          console.error('Error cargando productos:', error);
+          setError('No se pudieron cargar los productos. Por favor, inténtelo de nuevo más tarde.');
+          setLoading(false);
+          return;
+        }
+        
+        setProductos(data || []);
+        setProductosMostrados(data || []);
+        setTotalProductos(count || 0);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error inesperado:', err);
+        setError('Ocurrió un error inesperado. Por favor, inténtelo de nuevo más tarde.');
+        setLoading(false);
+      }
+    }
+    
+    cargarProductos();
+  }, [categoriaSeleccionada]);
 
-  const { sendWhatsAppMessage } = useWhatsapp();
+  // Función para cargar más productos
+  const cargarMasProductos = async () => {
+    try {
+      setCargandoMas(true);
+      const siguientePagina = paginaActual + 1;
+      const desde = (siguientePagina - 1) * PRODUCTOS_POR_PAGINA;
+      const hasta = desde + PRODUCTOS_POR_PAGINA - 1;
+      
+      let query = supabase
+        .from('productos')
+        .select('*')
+      
+      // Filtrar por categoría si no es 'Todos'
+      if (categoriaSeleccionada !== 'Todos') {
+        query = query.eq('categoria', categoriaSeleccionada);
+      }
+      
+      const { data, error } = await query
+        .order('id')
+        .range(desde, hasta);
+      
+      if (error) {
+        console.error('Error cargando más productos:', error);
+        setCargandoMas(false);
+        return;
+      }
+      
+      // Añadir los nuevos productos a los que ya se están mostrando
+      setProductosMostrados([...productosMostrados, ...(data || [])]);
+      setPaginaActual(siguientePagina);
+      setCargandoMas(false);
+    } catch (err) {
+      console.error('Error al cargar más productos:', err);
+      setCargandoMas(false);
+    }
+  };
 
-  const handleSolicitarCotizacion = () => {
-    const phone = '+5493364010667';
-    const productosMensaje = productosSeleccionados
-      .map(p => `• ${p.titulo} — Cantidad: ${carrito[p.id]}`)
-      .join('\n');
-    const mensaje = `Hola 👋, quiero hacer un pedido para retirar en local.\n\nProductos:\n${productosMensaje}\n\nNombre y apellido:\nHorario estimado de retiro:\nObservaciones:`;
-    sendWhatsAppMessage(phone, mensaje);
+  // Cargar categorías únicas
+  useEffect(() => {
+    async function cargarCategorias() {
+      try {
+        const { data, error } = await supabase
+          .from('productos')
+          .select('categoria')
+          .order('categoria');
+        
+        if (error) {
+          console.error('Error cargando categorías:', error);
+          return;
+        }
+        
+        // Extraer categorías únicas
+        const categoriasUnicas = [...new Set(data?.map(item => item.categoria) || [])];
+        setCategorias(['Todos', ...categoriasUnicas]);
+      } catch (err) {
+        console.error('Error cargando categorías:', err);
+      }
+    }
+    
+    cargarCategorias();
+  }, []);
+
+  // Manejar cambio de categoría
+  const handleCategoriaChange = (categoria: string) => {
+    setCategoriaSeleccionada(categoria);
+  };
+
+  // Renderizar productos o skeletons mientras cargan
+  const renderProductos = () => {
+    if (loading) {
+      return Array.from({ length: 6 }).map((_, index) => (
+        <ProductSkeleton key={index} />
+      ));
+    }
+
+    if (error) {
+      return (
+        <div className="col-span-full text-center py-8">
+          <p className="text-red-500">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 bg-sky-600 text-white px-4 py-2 rounded"
+          >
+            Intentar nuevamente
+          </button>
+        </div>
+      );
+    }
+
+    if (productosMostrados.length === 0) {
+      return (
+        <div className="col-span-full text-center py-8">
+          <p>No hay productos disponibles en esta categoría.</p>
+        </div>
+      );
+    }
+
+    return productosMostrados.map(producto => (
+      <CardProducto 
+        key={producto.id}
+        titulo={producto.titulo}
+        descripcion={producto.descripcion}
+        imagen={producto.imagen}
+        categoria={producto.categoria}
+        disponibilidad={producto.disponibilidad}
+        cantidad={cantidades[producto.id] || 0}
+        onSumar={() => handleSumar(producto.id)}
+        onRestar={() => handleRestar(producto.id)}
+      />
+    ));
   };
 
   return (
-    <section id="productos" className="py-8 md:py-14 bg-white">
-      <div className="w-full max-w-6xl mx-auto px-4">
-        {/* Encabezado con instrucciones claras */}
-            <div className="text-center max-w-3xl mx-auto mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-sky-950 mb-4">Nuestros Productos</h2>
-          <p className="text-lg text-gray-700 mb-6">
-            Explore nuestra selección de productos frescos. Para pedir por WhatsApp y retirar en local:
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 text-base text-gray-600">
-            <div className="flex items-center gap-2">
-              <span className="bg-sky-100 rounded-full w-8 h-8 flex items-center justify-center text-sky-700 font-semibold">1</span>
-              <span>Elija una categoría</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="bg-sky-100 rounded-full w-8 h-8 flex items-center justify-center text-sky-700 font-semibold">2</span>
-              <span>Seleccione cantidad</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="bg-sky-100 rounded-full w-8 h-8 flex items-center justify-center text-sky-700 font-semibold">3</span>
-              <span>Solicite cotización</span>
-            </div>
-          </div>
-        </div>
+    <section className="bg-white py-12">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-8">Nuestros Productos</h2>
 
-          {/* Buscador accesible */}
-          <div className="max-w-2xl mx-auto mb-6">
-            <label htmlFor="buscador-productos" className="sr-only">Buscar productos</label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="M21 21l-4.3-4.3"></path>
-                </svg>
-              </span>
-              <input
-                id="buscador-productos"
-                type="search"
-                value={busquedaInput}
-                onChange={(e) => setBusquedaInput(e.target.value)}
-                placeholder="Buscar por nombre, categoría o descripción"
-                aria-label="Buscar productos"
-                className="w-full pl-10 pr-24 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-gray-800"
-              />
-              {busqueda && (
-                <button
-                  type="button"
-                  onClick={() => setBusqueda('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700"
-                  aria-label="Limpiar búsqueda"
-                >
-                  Limpiar
-                </button>
-              )}
-            </div>
-            <div className="mt-2 text-sm text-gray-600 text-center" aria-live="polite">
-              {productosFiltrados.length} resultado{productosFiltrados.length !== 1 ? 's' : ''}
-            </div>
-          </div>
-
-          {/* Filtros simplificados */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
+        {/* Filtro de categorías */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
           {categorias.map((categoria) => (
             <button
               key={categoria}
-              onClick={() => setCategoriaActiva(categoria)}
-              className={`px-6 py-2.5 rounded-lg text-base font-medium transition-all duration-300 ${
-                categoriaActiva === categoria
-                  ? 'bg-sky-600 text-white shadow-md'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              onClick={() => handleCategoriaChange(categoria)}
+              className={`px-4 py-2 rounded-full transition ${
+                categoriaSeleccionada === categoria
+                  ? 'bg-sky-600 text-white'
+                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
               }`}
             >
               {categoria}
@@ -171,119 +224,38 @@ const ProductosSection = () => {
           ))}
         </div>
 
-        {/* Grid de Productos y Resumen de Pedido */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Lista de Productos */}
-          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {isLoading ? (
-              // Mostrar esqueletos durante la carga
-              Array.from({ length: 4 }).map((_, index) => (
-                <div key={`skeleton-${index}`}>
-                  <ProductSkeleton />
-                </div>
-              ))
-            ) : productosFiltrados.length === 0 ? (
-              <div className="md:col-span-2 text-center py-10">
-                <p className="text-gray-500">No se encontraron productos para su búsqueda.</p>
-              </div>
-            ) : (
-              // Mostrar productos una vez cargados
-              <>
-                {productosParaMostrar.map((producto) => (
-                  <div key={producto.id}>
-                    <CardProducto
-                      {...producto}
-                      cantidad={carrito[producto.id] || 0}
-                      onSumar={() => handleSumar(producto.id)}
-                      onRestar={() => handleRestar(producto.id)}
-                    />
-                  </div>
-                ))}
-                {productosFiltrados.length > cantidadVisible && (
-                  <div className="md:col-span-2 flex justify-center mt-2">
-                    <button
-                      type="button"
-                      onClick={() => setCantidadVisible(prev => prev + INCREMENTO_LISTA)}
-                      className="px-6 py-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium border border-gray-300"
-                    >
-                      Ver más
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-
-           {/* Panel de Resumen y WhatsApp */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Resumen del Pedido</h3>
-              
-              {productosSeleccionados.length === 0 ? (
-                <div className="text-center py-8">
-                  <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  <p className="text-gray-500">No ha seleccionado ningún producto</p>
-                </div>
-              ) : (
-                <div className="space-y-4 mb-6">
-                  {productosSeleccionados.map(producto => (
-                    <div key={producto.id} className="flex justify-between items-center py-2 border-b">
-                      <div>
-                        <p className="font-medium text-gray-900">{producto.titulo}</p>
-                        <p className="text-sm text-gray-500">Cantidad: {carrito[producto.id]}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <div className="space-y-4">
-                {/* Mensajes de error */}
-                {hasErrors && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <ul className="list-disc list-inside space-y-1">
-                      {messages.map((message, index) => (
-                        <li key={index} className="text-sm text-red-600">{message}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                
-                {/* Botón de WhatsApp */}
-                <button
-                  onClick={handleSolicitarCotizacion}
-                  disabled={productosSeleccionados.length === 0 || hasErrors}
-                  className="w-full bg-sky-600 text-white py-4 px-6 rounded-lg text-lg font-medium hover:bg-sky-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {productosSeleccionados.length === 0 ? (
-                    'Seleccione productos'
-                  ) : hasErrors ? (
-                    'Revise los errores'
-                  ) : (
-                    <>
-                      Pedir por WhatsApp
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* Nota informativa */}
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  <span className="font-medium">Nota:</span> No realizamos envíos. El pedido se retira en local. Los precios se confirman por WhatsApp según disponibilidad.
-                </p>
-              </div>
-            </div>
-          </div>
+        {/* Grid de productos */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {renderProductos()}
         </div>
+
+        {/* Botón Ver Más */}
+        {!loading && !error && productosMostrados.length > 0 && productosMostrados.length < totalProductos && (
+          <div className="flex justify-center mt-10">
+            <button
+              onClick={cargarMasProductos}
+              disabled={cargandoMas}
+              className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-lg font-medium transition-all flex items-center"
+            >
+              {cargandoMas ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Cargando...
+                </>
+              ) : (
+                <>
+                  Ver más productos
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
 };
 
-export default ProductosSection; 
+export default ProductosSection;

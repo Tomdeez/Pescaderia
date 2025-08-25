@@ -32,7 +32,7 @@ const MenuDelDiaSection = dynamic(() => import("@components/sections/MenuDelDiaS
   ssr: true
 });
 
-const PromocionesSection = dynamic(() => import("@components/sections/PromocionesSection"), {
+const PromocionesSection = dynamic(() => import("@components/sections/PromocionesSection-supabase"), {
   loading: () => <LoadingSpinner />,
   ssr: true
 });

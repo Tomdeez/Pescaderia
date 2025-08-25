@@ -9,28 +9,28 @@ const promociones = [
     id: 1,
     titulo: "10% de descuento",
     descripcion: "En todos los productos abonando en efectivo para compras mayores a $15.000",
-    imagen: "/imagenes/10 efectivo.jpeg",
+    imagen: "/imagenes/10efectivo.jpeg",
     etiqueta: "EFECTIVO"
   },
   {
     id: 2,
     titulo: "20% para jubilados",
     descripcion: "Solo los jueves para compras mayores a $10.000",
-    imagen: "/imagenes/20 jubilados.jpeg",
+    imagen: "/imagenes/20jubilados.jpeg",
     etiqueta: "JUEVES"
   },
   {
     id: 3,
     titulo: "20% en pescados de río",
     descripcion: "Promoción especial solo los martes",
-    imagen: "/imagenes/20 pescado rio.jpeg",
+    imagen: "/imagenes/20pescado rio.jpeg",
     etiqueta: "MARTES"
   },
   {
     id: 4,
     titulo: "20% en medallones",
     descripcion: "Solo los sábados en medallones de pollo o merluza",
-    imagen: "/imagenes/20 medallones.jpeg",
+    imagen: "/imagenes/20medallones.jpeg",
     etiqueta: "SÁBADOS"
   },
 ];
